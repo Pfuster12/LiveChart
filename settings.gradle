@@ -1,0 +1,3 @@
+include ':livechart'
+include ':app'
+rootProject.name = "LiveChartDemoApp"
