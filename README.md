@@ -85,7 +85,7 @@ livechart.setDataset(dataset)
 ## Things to consider
 
 LiveChart tries to leave a minimal footprint as possible, extending from the built-in Android `View` 
-class to perform the draw operations. It follows best practice advise to only perform draw ops
+class to perform the draw operations. It follows best practice advice to only perform draw ops
 and avoid setting any variables to memory during the `onDraw()` call.
 
 HOWEVER, drawing big datasets is a costly operation and the Android UI will appear 'janky' if you

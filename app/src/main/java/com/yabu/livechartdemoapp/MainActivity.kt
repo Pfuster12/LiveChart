@@ -6,6 +6,7 @@ import com.yabu.livechart.view.LiveChartView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var livechart: LiveChartView
+    private lateinit var livechartSimple: LiveChartView
     private lateinit var livechartNegative: LiveChartView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         livechart = findViewById(R.id.main_live_chart)
+        livechartSimple = findViewById(R.id.main_simple_live_chart)
         livechartNegative = findViewById(R.id.main_negative_live_chart)
 
         val dataset = SampleData.createSampleData()
@@ -23,6 +25,9 @@ class MainActivity : AppCompatActivity() {
             .drawYBounds()
             .drawBaseline()
             .drawFill()
+            .drawDataset()
+
+        livechartSimple.setDataset(dataset)
             .drawDataset()
 
         livechartNegative.setDataset(negativeDataset)

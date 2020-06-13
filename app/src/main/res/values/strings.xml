@@ -3,4 +3,5 @@
     <string name="livechart_sample">LiveChart Sample</string>
     <string name="positive_livechart_sample">Positive Livechart Sample</string>
     <string name="negative_livechart_sample">Negative Livechart Sample</string>
+    <string name="simple_livechart_sample">Simple Livechart Sample</string>
 </resources>
