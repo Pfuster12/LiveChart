@@ -4,6 +4,8 @@ LiveChart is an open-source Android library to draw beautiful yet powerful chart
 
 The library allows for color and data display customization, in an easy to learn, descriptive API.
 
+<img src="https://github.com/Pfuster12/LiveChart/blob/master/livechart_sample.png" height="720"/>
+
 ## How to Use
 
 LiveChart knows how to draw from a `Dataset` only. Create a new dataset containing a list of `DataPoint`'s:
