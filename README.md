@@ -12,6 +12,10 @@ Draw from a simple line to a fully tagged chart with bounds and baseline. The li
 
 Anybody is welcome to contribute! The repository is Commitizen friendly, please refer to their guidelines on commit messages.
 
+## Roadmap
+
+The LiveChart library has just started out. Have a look at the roadmap for new features in the horizon. Have a request? Open up an issue with a feature tag.
+
 ## How to Use
 
 LiveChart knows how to draw from a `Dataset` only. Create a new dataset containing a list of `DataPoint`'s:
