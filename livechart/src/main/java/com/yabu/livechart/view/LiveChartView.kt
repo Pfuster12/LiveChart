@@ -64,9 +64,9 @@ class LiveChartView : View {
     private var dataset: Dataset = Dataset.new()
 
     /**
-     * Previous day dataset
+     * Second dataset
      */
-    private var previousDataset: Dataset = Dataset.new()
+    private var secondDataset: Dataset = Dataset.new()
 
     /**
      * Y Bounds display flag.
@@ -94,10 +94,10 @@ class LiveChartView : View {
     private var boundsTextColor = Color.BLACK
 
     /**
-     * Previous data set path color.
+     * Second data set path color.
      */
-    private var previousDatasetPathColor = ContextCompat.getColor(context,
-        R.color.previousDataset)
+    private var secondDatasetPathColor = ContextCompat.getColor(context,
+        R.color.secondDataset)
 
     /**
      * Set the [dataset] of this chart.
@@ -109,11 +109,11 @@ class LiveChartView : View {
     }
 
     /**
-     * Set the previous [dataset] of this chart.
+     * Set the Second [dataset] of this chart.
      */
     @PublicApi
-    fun setPreviousDataset(dataset: Dataset): LiveChartView {
-        this.previousDataset = dataset
+    fun setSecondDataset(dataset: Dataset): LiveChartView {
+        this.secondDataset = dataset
         return this
     }
 
@@ -159,13 +159,13 @@ class LiveChartView : View {
     }
 
     /**
-     * Set Previous dataset path color.
+     * Set Second dataset path color.
      */
     @PublicApi
-    fun setPreviousDatasetPathColor(pathColor: Int): LiveChartView {
-        previousDatasetPathColor = pathColor
+    fun setSecondDatasetColor(pathColor: Int): LiveChartView {
+        secondDatasetPathColor = pathColor
 
-        previousDatasetPaint.color = pathColor
+        secondDatasetPaint.color = pathColor
 
         return this
     }
@@ -219,7 +219,7 @@ class LiveChartView : View {
     /**
      * Path generated from dataset points.
      */
-    private var previousDatasetPath = Path().apply {
+    private var secondDatasetPath = Path().apply {
         moveTo(chartBounds.start, baseline)
         dataset.points.forEach { point ->
             lineTo(point.x,
@@ -230,11 +230,11 @@ class LiveChartView : View {
     /**
      * Line [Paint] for this chart.
      */
-    private var previousDatasetPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private var secondDatasetPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth =
             STROKE_WIDTH
-        color = previousDatasetPathColor
+        color = secondDatasetPathColor
         strokeCap = Paint.Cap.BUTT
         strokeJoin = Paint.Join.MITER
     }
@@ -325,11 +325,11 @@ class LiveChartView : View {
      * Find the bounds data point to screen pixels ratio for the Y Axis.
      */
     private fun yBoundsToPixels(): Float {
-        return if (previousDataset.hasData()) {
+        return if (secondDataset.hasData()) {
             (max(dataset.upperBound(),
-                previousDataset.upperBound()) -
+                secondDataset.upperBound()) -
                     min(dataset.lowerBound(),
-                        previousDataset.lowerBound())) / chartBounds.bottom
+                        secondDataset.lowerBound())) / chartBounds.bottom
         } else {
             (dataset.upperBound() - dataset.lowerBound()) / chartBounds.bottom
         }
@@ -339,10 +339,10 @@ class LiveChartView : View {
      * Transform a Y Axis data point to screen pixels within bounds.
      */
     private fun Float.yPointToPixels(): Float {
-        return if (previousDataset.hasData()) {
+        return if (secondDataset.hasData()) {
             chartBounds.bottom -
                     ((this - min(dataset.lowerBound(),
-                        previousDataset.lowerBound())) / yBoundsToPixels())
+                        secondDataset.lowerBound())) / yBoundsToPixels())
         } else {
             chartBounds.bottom - ((this - dataset.lowerBound()) / yBoundsToPixels())
         }
@@ -400,8 +400,8 @@ class LiveChartView : View {
                 }
             }
 
-            previousDatasetPath = Path().apply {
-                previousDataset.points.forEachIndexed { index, point ->
+            secondDatasetPath = Path().apply {
+                secondDataset.points.forEachIndexed { index, point ->
                     // move path to first data point,
                     if (index == 0) {
                         moveTo(chartBounds.start, point.y.yPointToPixels())
@@ -470,9 +470,9 @@ class LiveChartView : View {
                 baselinePaint)
         }
 
-        if (previousDataset.points.size > 1) {
-            canvas.drawPath(previousDatasetPath,
-                previousDatasetPaint)
+        if (secondDataset.points.size > 1) {
+            canvas.drawPath(secondDatasetPath,
+                secondDatasetPaint)
         }
 
         // draw dataset
