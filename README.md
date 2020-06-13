@@ -1,10 +1,16 @@
-# Welcome to LiveChart
+## Welcome to the LiveChart Repository :wave:
 
-LiveChart is an open-source Android library to draw beautiful yet powerful charts.
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-The library allows for color and data display customization, in an easy to learn, descriptive API.
+LiveChart is an open-source Android library to draw beautiful yet powerful charts. The library allows for color and data display customization, in an easy to learn, descriptive API.
 
-<img src="https://github.com/Pfuster12/LiveChart/blob/master/livechart_sample.png" height="720"/>
+<img src="https://github.com/Pfuster12/LiveChart/blob/master/livechart_sample.png" height="680"/>
+
+Draw from a simple line to a fully tagged chart with bounds and baseline. The library is perfect (and started out) to draw financial charts where the baseline and color of the chart matters.
+
+## Contributing
+
+Anybody is welcome to contribute! The repository is Commitizen friendly, please refer to their guidelines on commit messages.
 
 ## How to Use
 
@@ -33,7 +39,7 @@ livechart.setDataset(dataset)
 
 ## Draw Options
 
-The LiveChart can be as simple as drawing a line on a blank canvas:
+The chart can be as simple as drawing a line on a blank canvas:
 
 ```kotlin
  val dataset = Dataset(mutableListOf(DataPoint(0f, 1f),
@@ -63,6 +69,8 @@ livechart.setDataset(dataset)
     .drawFill()
     .drawDataset()
 ```
+
+Refer to the screenshot to view the different options and color change on below baseline/above baseline.
 
 ## Second Dataset
 
