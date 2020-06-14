@@ -1,12 +1,36 @@
 ## Welcome to the LiveChart Repository :wave:
 
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![](https://jitpack.io/v/Pfuster12/LiveChart.svg)](https://jitpack.io/#Pfuster12/LiveChart) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 LiveChart is an open-source Android library to draw beautiful yet powerful charts. The library allows for color and data display customization, in an easy to learn, descriptive API.
 
 <img src="https://github.com/Pfuster12/LiveChart/blob/master/livechart_sample.png" height="680"/>
 
 Draw from a simple line to a fully tagged chart with bounds and baseline. The library is perfect (and started out) to draw financial charts where the baseline and color of the chart matters.
+
+## Add it to your app
+
+To get LiveChart into your build:
+
+**Step 1. Add the JitPack repository to your build file**
+
+Add it in your root build.gradle at the end of repositories:
+```gradle
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+```
+
+**Step 2. Add the dependency**
+
+```gradle
+dependencies {
+	  implementation 'com.github.Pfuster12:LiveChart:v1.0.0'
+}
+```
 
 ## Contributing
 
