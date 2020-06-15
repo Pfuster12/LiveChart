@@ -129,7 +129,7 @@ class LiveChartView : View {
 
         // paint color
         datasetLinePaint.color = chartStyle.mainColor
-        datasetFillPaint.color = Color.parseColor(chartStyle.mainFillColor)
+        datasetFillPaint.color =chartStyle.mainFillColor
         baselinePaint.color = chartStyle.baselineColor
         boundsTextPaint.color = chartStyle.textColor
 
@@ -226,9 +226,9 @@ class LiveChartView : View {
     private fun Paint.setColor() {
         if (drawBaselineConditionalColor) {
             this.color = if (dataset.points.last().y > baseline) {
-                Color.parseColor(chartStyle.positiveColor)
+                chartStyle.positiveColor
             } else {
-                Color.parseColor(chartStyle.negativeColor)
+                chartStyle.negativeColor
             }
         } else {
             this.color = chartStyle.mainColor
@@ -486,7 +486,7 @@ class LiveChartView : View {
                 dataset.upperBound().yPointToPixels(),
                 chartBounds.start,
                 chartBounds.bottom,
-                Color.parseColor(fillColor),
+                fillColor,
                 Color.parseColor("#00000000"),
                 Shader.TileMode.CLAMP)
 

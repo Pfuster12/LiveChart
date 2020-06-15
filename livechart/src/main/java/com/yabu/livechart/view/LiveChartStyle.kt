@@ -10,37 +10,37 @@ class LiveChartStyle {
     /**
      * Label text color.
      */
-    var textColor: Int = Color.BLACK
+    var textColor: Int = LiveChartAttributes.TEXT_COLOR
 
     /**
      * Main color
      */
-    var mainColor: Int = Color.BLACK
+    var mainColor: Int = LiveChartAttributes.MAIN_COLOR
 
     /**
      * Positive from baseline fill color.
      */
-    var mainFillColor: String = LiveChartAttributes.FILL_COLOR
+    var mainFillColor: Int = Color.parseColor(LiveChartAttributes.FILL_COLOR)
 
     /**
      * Positive from baseline color.
      */
-    var positiveColor: String = LiveChartAttributes.POSITIVE_COLOR
+    var positiveColor: Int = Color.parseColor(LiveChartAttributes.POSITIVE_COLOR)
 
     /**
      * Negative from baseline color.
      */
-    var negativeColor: String = LiveChartAttributes.NEGATIVE_COLOR
+    var negativeColor: Int =  Color.parseColor(LiveChartAttributes.NEGATIVE_COLOR)
 
     /**
      * Positive from baseline fill color.
      */
-    var positiveFillColor: String = LiveChartAttributes.POSITIVE_FILL_COLOR
+    var positiveFillColor: Int =  Color.parseColor(LiveChartAttributes.POSITIVE_FILL_COLOR)
 
     /**
      * Negative from baseline fill color.
      */
-    var negativeFillColor: String = LiveChartAttributes.NEGATIVE_FILL_COLOR
+    var negativeFillColor: Int = Color.parseColor(LiveChartAttributes.NEGATIVE_FILL_COLOR)
 
     /**
      * Baseline color.
