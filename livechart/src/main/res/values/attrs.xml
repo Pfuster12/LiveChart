@@ -10,5 +10,6 @@
         <attr name="pathStrokeWidth" format="dimension"/>
         <attr name="baselineStrokeWidth" format="dimension"/>
         <attr name="baselineDashGap" format="dimension"/>
+        <attr name="labelTextHeight" format="dimension"/>
     </declare-styleable>
 </resources>

@@ -120,8 +120,9 @@ livechart.setDataset(dataset)
     .drawBaseline()
     // Set manually the data point from where the baseline draws,
     .setBaselineManually(1.5f)
-    // draws a gradient fill on the chart line,
-    .drawFill()
+    // Draws a fill on the chart line. You can set whether to draw with a transparent gradient
+    // or a solid fill. Defaults to gradient.
+    .drawFill(withGradient = true)
     // draws the color of the path and fill conditional to being above/below the baseline datapoint
     .drawBaselineConditionalColor()
     .drawDataset()
@@ -142,6 +143,7 @@ properties you can change:
 ```kotlin
 val style = LiveChartStyle().apply {
     textColor = Color.BLUE
+    textHeight = 30f 
     mainColor = Color.GREEN
     mainFillColor = Color.MAGENTA
     baselineColor = Color.BLUE
@@ -153,7 +155,7 @@ val style = LiveChartStyle().apply {
 livechart.setDataset(dataset)
     .setLiveChartStyle(style)
     .drawBaseline()
-    .drawFill()
+    .drawFill(withGradient = true)
     .drawYBounds()
     .drawDataset()
 ```
@@ -180,6 +182,7 @@ You can also style a number of attributes through the XML layout attributes. For
         app:pathStrokeWidth="4dp"
         app:baselineStrokeWidth="4dp"
         app:baselineDashGap="8dp"
+        app:labelTextHeight="14sp"
         app:baselineColor="@color/colorPrimaryDark"/>
 ```
 

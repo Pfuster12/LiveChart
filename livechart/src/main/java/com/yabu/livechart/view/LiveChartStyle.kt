@@ -81,4 +81,9 @@ class LiveChartStyle {
      * Baseline dash line gap width
      */
     var chartEndPadding = LiveChartAttributes.CHART_END_PADDING
+
+    /**
+     * Chart text height
+     */
+    var textHeight = LiveChartAttributes.TEXT_HEIGHT
 }

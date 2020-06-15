@@ -52,7 +52,8 @@ class MainActivity : AppCompatActivity() {
             mainColor = Color.GRAY
             secondColor = Color.MAGENTA
             pathStrokeWidth = 8f
-            secondPathStrokeWidth = 8f
+            secondPathStrokeWidth = 4f
+            textHeight = 40f
         }
 
         livechart.setDataset(firstDataset)

@@ -8,10 +8,8 @@ import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
 import com.yabu.livechart.model.Dataset
 import com.yabu.livechart.utils.PublicApi
-import com.yabu.livechart.view.LiveChartAttributes.CHART_END_PADDING
 import com.yabu.livechart.view.LiveChartAttributes.TAG_PADDING
 import com.yabu.livechart.view.LiveChartAttributes.TAG_WIDTH
-import com.yabu.livechart.view.LiveChartAttributes.TEXT_HEIGHT
 import kotlin.math.max
 import kotlin.math.min
 
@@ -27,6 +25,9 @@ import kotlin.math.min
  */
 class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
+    /**
+     * The chart bounds in the screen pixel space
+     */
     private var chartBounds = Bounds(
         top = paddingTop.toFloat(),
         end = paddingEnd.toFloat(),
@@ -120,6 +121,9 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
                     chartStyle.baselineStrokeWidth)
                 chartStyle.baselineDashLineGap = getDimension(R.styleable.LiveChart_baselineDashGap,
                     chartStyle.baselineDashLineGap)
+
+                chartStyle.textHeight = getDimension(R.styleable.LiveChart_labelTextHeight,
+                    chartStyle.textHeight)
             } finally {
                 recycle()
             }
@@ -369,7 +373,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     private var endPointTagTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         typeface = Typeface.DEFAULT_BOLD
-        textSize = TEXT_HEIGHT
+        textSize = chartStyle.textHeight
     }
 
     /**
@@ -377,7 +381,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
      */
     private var boundsTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = chartStyle.textColor
-        textSize = TEXT_HEIGHT
+        textSize = chartStyle.textHeight
     }
 
     /**
@@ -414,10 +418,10 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
         return if (secondDataset.hasData()) {
             (max(dataset.points.last().x, secondDataset.points.last().x) -
                     min(dataset.points.first().x, secondDataset.points.first().x)) /
-                    (chartBounds.end - if (drawYBounds) CHART_END_PADDING else 0f)
+                    (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
         } else {
             dataset.points.last().x /
-                    (chartBounds.end - if (drawYBounds) CHART_END_PADDING else 0f)
+                    (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
         }
     }
 
@@ -538,7 +542,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
             canvas.drawLine(chartBounds.start,
                 baseline.yPointToPixels(),
                 // account for end padding only if Y Bounds are visible
-                chartBounds.end  - if (drawYBounds) CHART_END_PADDING else 0f,
+                chartBounds.end  - if (drawYBounds) chartStyle.chartEndPadding else 0f,
                 baseline.yPointToPixels(),
                 baselinePaint)
         }
@@ -559,39 +563,39 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
 
         if (drawYBounds) {
             // draw y Bounds line,
-            canvas.drawLine(chartBounds.end - CHART_END_PADDING,
+            canvas.drawLine(chartBounds.end - chartStyle.chartEndPadding,
                 chartBounds.top,
-                chartBounds.end - CHART_END_PADDING,
+                chartBounds.end - chartStyle.chartEndPadding,
                 chartBounds.bottom,
                 yBoundLinePaint)
 
             // LOWER BOUND
             canvas.drawText("%.2f".format(dataset.lowerBound()),
-                chartBounds.end - TAG_WIDTH,
+                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.bottom,
                 boundsTextPaint)
 
             // THIRD QUARTER BOUND
             canvas.drawText("%.2f".format(dataset.upperBound()*0.75f),
-                chartBounds.end - TAG_WIDTH,
+                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.top + chartBounds.bottom/4,
                 boundsTextPaint)
 
             // MIDDLE BOUND
             canvas.drawText("%.2f".format(dataset.upperBound()/2),
-                chartBounds.end - TAG_WIDTH,
+                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.top + chartBounds.bottom/2,
                 boundsTextPaint)
 
             // FIRST QUARTER BOUND
             canvas.drawText("%.2f".format(dataset.upperBound()/4),
-                chartBounds.end - TAG_WIDTH,
+                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.top + chartBounds.bottom*0.75f,
                 boundsTextPaint)
 
             // UPPER BOUND
             canvas.drawText("%.2f".format(dataset.upperBound()),
-                chartBounds.end - TAG_WIDTH,
+                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.top,
                 boundsTextPaint)
 
@@ -600,19 +604,21 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
                 // draw end tag line
                 canvas.drawLine(chartBounds.start,
                     dataset.points.last().y.yPointToPixels(),
-                    chartBounds.end - CHART_END_PADDING,
+                    chartBounds.end - chartStyle.chartEndPadding,
                     dataset.points.last().y.yPointToPixels(),
                     endPointLinePaint)
 
                 // TAG
-                canvas.drawRect(chartBounds.end - CHART_END_PADDING,
-                    dataset.points.last().y.yPointToPixels() - TEXT_HEIGHT - TAG_PADDING,
-                    chartBounds.end - CHART_END_PADDING + TAG_WIDTH,
+                canvas.drawRect(chartBounds.end - chartStyle.chartEndPadding,
+                    dataset.points.last().y.yPointToPixels() -
+                            chartStyle.textHeight -
+                            TAG_PADDING,
+                    chartBounds.end - chartStyle.chartEndPadding + TAG_WIDTH,
                     dataset.points.last().y.yPointToPixels(),
                     endPointTagPaint)
 
                 canvas.drawText("%.2f".format(dataset.points.last().y),
-                    chartBounds.end - TAG_WIDTH,
+                    chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                     dataset.points.last().y.yPointToPixels() - TAG_PADDING,
                     endPointTagTextPaint)
             }
