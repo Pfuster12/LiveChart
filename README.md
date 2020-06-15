@@ -42,9 +42,34 @@ The LiveChart library has just started out. Have a look at the roadmap for new f
 
 ## How to Use
 
+You'll need a reference to a LiveChart view first, either through XML or programmatically:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    tools:context=".MainActivity">
+
+    <com.yabu.livechart.view.LiveChartView
+        android:id="@+id/live_chart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
+
+</FrameLayout>
+```
+
+```kotlin
+val liveChart = findViewById(R.id.live_chart)
+```
+
 LiveChart knows how to draw from a `Dataset` only. Create a new dataset containing a list of `DataPoint`'s:
 
 ```kotlin
+val liveChart = findViewById(R.id.live_chart)
+
  val dataset = Dataset(mutableListOf(DataPoint(0f, 1f),
     DataPoint(1f, 3f),
     DataPoint(2f, 6f)))
@@ -53,6 +78,8 @@ LiveChart knows how to draw from a `Dataset` only. Create a new dataset containi
 In order to begin the draw operation, the library uses a chainable, descriptive public API:
 
 ```kotlin
+val liveChart = findViewById(R.id.live_chart)
+
  val dataset = Dataset(mutableListOf(DataPoint(0f, 1f),
     DataPoint(1f, 3f),
     DataPoint(2f, 6f)))
