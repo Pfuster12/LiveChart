@@ -18,6 +18,11 @@ class LiveChartStyle {
     var mainColor: Int = LiveChartAttributes.MAIN_COLOR
 
     /**
+     * Main color
+     */
+    var secondColor: Int = Color.GRAY
+
+    /**
      * Positive from baseline fill color.
      */
     var mainFillColor: Int = Color.parseColor(LiveChartAttributes.FILL_COLOR)
@@ -51,6 +56,11 @@ class LiveChartStyle {
      * Path stroke width
      */
     var pathStrokeWidth = LiveChartAttributes.STROKE_WIDTH
+
+    /**
+     * Second dataset Path stroke width
+     */
+    var secondPathStrokeWidth = LiveChartAttributes.STROKE_WIDTH
 
     /**
      * Baseline stroke width

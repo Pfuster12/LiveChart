@@ -132,9 +132,11 @@ class LiveChartView : View {
         datasetFillPaint.color =chartStyle.mainFillColor
         baselinePaint.color = chartStyle.baselineColor
         boundsTextPaint.color = chartStyle.textColor
+        secondDatasetPaint.color = chartStyle.secondColor
 
         // stroke width
         datasetLinePaint.strokeWidth = chartStyle.pathStrokeWidth
+        secondDatasetPaint.strokeWidth = chartStyle.secondPathStrokeWidth
         baselinePaint.strokeWidth = chartStyle.baselineStrokeWidth
         // baseline path effect
         if (chartStyle.baselineDashLineGap > 0f) {
@@ -209,18 +211,6 @@ class LiveChartView : View {
     }
 
     /**
-     * Set Second dataset path color.
-     */
-    @PublicApi
-    fun setSecondDatasetColor(pathColor: Int): LiveChartView {
-        secondDatasetPathColor = pathColor
-
-        secondDatasetPaint.color = pathColor
-
-        return this
-    }
-
-    /**
      * Helper to set the chart highlight color according to [baseline]
      */
     private fun Paint.setColor() {
@@ -273,7 +263,7 @@ class LiveChartView : View {
      */
     private var secondDatasetPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        strokeWidth = chartStyle.pathStrokeWidth
+        strokeWidth = chartStyle.secondPathStrokeWidth
         color = secondDatasetPathColor
         strokeCap = Paint.Cap.BUTT
         strokeJoin = Paint.Join.MITER
@@ -383,8 +373,8 @@ class LiveChartView : View {
     private fun Float.yPointToPixels(): Float {
         return if (secondDataset.hasData()) {
             chartBounds.bottom -
-                    ((this - min(dataset.lowerBound(),
-                        secondDataset.lowerBound())) / yBoundsToPixels())
+                    ((this - min(dataset.lowerBound(), secondDataset.lowerBound())) /
+                            yBoundsToPixels())
         } else {
             chartBounds.bottom - ((this - dataset.lowerBound()) / yBoundsToPixels())
         }
@@ -394,8 +384,14 @@ class LiveChartView : View {
      * Find the bounds data point to screen pixels ratio for the X Axis.
      */
     private fun xBoundsToPixels(): Float {
-        return dataset.points.last().x /
-                (chartBounds.end - if (drawYBounds) CHART_END_PADDING else 0f)
+        return if (secondDataset.hasData()) {
+            (max(dataset.points.last().x, secondDataset.points.last().x) -
+                    min(dataset.points.first().x, secondDataset.points.first().x)) /
+                    (chartBounds.end - if (drawYBounds) CHART_END_PADDING else 0f)
+        } else {
+            dataset.points.last().x /
+                    (chartBounds.end - if (drawYBounds) CHART_END_PADDING else 0f)
+        }
     }
 
     /**
@@ -446,7 +442,8 @@ class LiveChartView : View {
                 secondDataset.points.forEachIndexed { index, point ->
                     // move path to first data point,
                     if (index == 0) {
-                        moveTo(chartBounds.start, point.y.yPointToPixels())
+                        moveTo(chartBounds.start + point.x.xPointToPixels(),
+                            point.y.yPointToPixels())
                         return@forEachIndexed
                     }
 
