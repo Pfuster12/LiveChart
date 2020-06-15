@@ -89,12 +89,13 @@ the axis bounds with data labels:
 livechart.setDataset(dataset)
      // Draws the Y Axis bounds with Text data points.
     .drawYBounds()
-    // Draws a customizable base line from the first point of the dataset or manually set a datapoint
+    // Draws a customizable base line from the first point of the dataset or manually set a data point
     .drawBaseline()
     // Set manually the data point from where the baseline draws,
     .setBaselineManually(1.5f)
     // draws a gradient fill on the chart line,
     .drawFill()
+    // draws the color of the path and fill conditional to being above/below the baseline datapoint
     .drawBaselineConditionalColor()
     .drawDataset()
 ```
@@ -132,8 +133,8 @@ The above example would result in a rather horrible (yet accurate) view of:
 
 <img src="/.sample-images/livechart_styling_example_1.png" height="120"/>
 
-For the full set of attributes available to customise refer to the LiveChartStyle reference.
-Any attributes not explicitly set fallback to the LiveChartAttributes object defaults you can view in the
+For the full set of attributes available to customise refer to the `LiveChartStyle` reference.
+Any attributes not explicitly set fallback to the `LiveChartAttributes` object defaults you can view in the
 reference too.
 
 ## Second Dataset
@@ -143,37 +144,37 @@ second dataset defaults to a grey color but you can set the color manually throu
 
 ```kotlin
  val firstDataset = Dataset(mutableListOf(DataPoint(0f, 1f),
-            DataPoint(1f, 2f),
-            DataPoint(2f, 3f),
-            DataPoint(3f, 4f),
-            DataPoint(4f, 5f),
-            DataPoint(5f, 8f),
-            DataPoint(6f, 13f),
-            DataPoint(7f, 21f)
-        ))
+    DataPoint(1f, 2f),
+    DataPoint(2f, 3f),
+    DataPoint(3f, 4f),
+    DataPoint(4f, 5f),
+    DataPoint(5f, 8f),
+    DataPoint(6f, 13f),
+    DataPoint(7f, 21f)
+))
 
-        val secondDataset = Dataset(mutableListOf(DataPoint(0f, 0f),
-            DataPoint(1f, 1f),
-            DataPoint(2f, 2f),
-            DataPoint(3f, 3f),
-            DataPoint(4f, 4f),
-            DataPoint(5f, 5f),
-            DataPoint(6f, 10f),
-            DataPoint(7f, 18f)
-        ))
+val secondDataset = Dataset(mutableListOf(DataPoint(0f, 0f),
+    DataPoint(1f, 1f),
+    DataPoint(2f, 2f),
+    DataPoint(3f, 3f),
+    DataPoint(4f, 4f),
+    DataPoint(5f, 5f),
+    DataPoint(6f, 10f),
+    DataPoint(7f, 18f)
+))
 
-        val style = LiveChartStyle().apply {
-            mainColor = Color.GRAY
-            secondColor = Color.MAGENTA
-            pathStrokeWidth = 8f
-            secondPathStrokeWidth = 8f
-        }
+val style = LiveChartStyle().apply {
+    mainColor = Color.GRAY
+    secondColor = Color.MAGENTA
+    pathStrokeWidth = 8f
+    secondPathStrokeWidth = 8f
+}
 
-        livechart.setDataset(firstDataset)
-            .setSecondDataset(secondDataset)
-            .setLiveChartStyle(style)
-            .drawYBounds()
-            .drawDataset()
+livechart.setDataset(firstDataset)
+    .setSecondDataset(secondDataset)
+    .setLiveChartStyle(style)
+    .drawYBounds()
+    .drawDataset()
 ```
 
 This results in the following chart:
