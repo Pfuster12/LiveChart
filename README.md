@@ -79,7 +79,7 @@ livechart.setDataset(dataset)
 ```
 
 Or provide the full set of display capabilities by adding a baseline, a gradient fill and
-the axis bounds with text data points:
+the axis bounds with data labels:
 
 ```kotlin
  val dataset = Dataset(mutableListOf(DataPoint(0f, 1f),
@@ -92,13 +92,16 @@ livechart.setDataset(dataset)
     // Draws a customizable base line from the first point of the dataset or manually set a datapoint
     .drawBaseline()
     // Set manually the data point from where the baseline draws,
-    .setBaselineManually()
+    .setBaselineManually(1.5f)
     // draws a gradient fill on the chart line,
     .drawFill()
+    .drawBaselineConditionalColor()
     .drawDataset()
 ```
 
 Refer to the screenshot to view the different options and color change on below baseline/above baseline.
+
+You can find all the possible draw options under the API reference.
 
 ## Styling
 
@@ -135,7 +138,7 @@ reference too.
 
 ## Second Dataset
 
-The library allows for powerful comparisons by drawing a second dataset on the same chart. The
+The library allows for data comparisons by drawing a second dataset on the same chart. The
 second dataset defaults to a grey color but you can set the color manually through the style object:
 
 ```kotlin
@@ -176,6 +179,9 @@ second dataset defaults to a grey color but you can set the color manually throu
 This results in the following chart:
 
 <img src="/.sample-images/livechart_second_dataset_example_1.png" height="120"/>
+
+> **NOTE** Want more than two datasets? Don't worry, the project roadmap intends to support drawing 
+> an unlimited number of datasets provided in a list. 
 
 ## Things to consider
 
