@@ -82,6 +82,11 @@ class LiveChartView : View {
     private var drawFill = false
 
     /**
+     * Fill gradient display flag.
+     */
+    private var drawGradientFill = true
+
+    /**
      * Label last point.
      */
     private var drawLastPointLabel = false
@@ -121,7 +126,7 @@ class LiveChartView : View {
     }
 
     /**
-     * Draw baseline flag.
+     * Set the style object [LiveChartStyle] to this chart.
      */
     @PublicApi
     fun setLiveChartStyle(style: LiveChartStyle): LiveChartView {
@@ -173,9 +178,9 @@ class LiveChartView : View {
      * Draw Fill flag.
      */
     @PublicApi
-    fun drawFill(): LiveChartView {
+    fun drawFill(withGradient: Boolean = true): LiveChartView {
         drawFill = true
-
+        drawGradientFill = withGradient
         return this
     }
 
@@ -469,6 +474,7 @@ class LiveChartView : View {
                     chartBounds.bottom)
             }
 
+            // Gradient paint
             var fillColor = chartStyle.mainFillColor
 
             if (drawBaselineConditionalColor) {
@@ -479,13 +485,15 @@ class LiveChartView : View {
                 }
             }
 
-            datasetFillPaint.shader = LinearGradient(chartBounds.start,
-                dataset.upperBound().yPointToPixels(),
-                chartBounds.start,
-                chartBounds.bottom,
-                fillColor,
-                Color.parseColor("#00000000"),
-                Shader.TileMode.CLAMP)
+            if (drawGradientFill) {
+                datasetFillPaint.shader = LinearGradient(chartBounds.start,
+                    dataset.upperBound().yPointToPixels(),
+                    chartBounds.start,
+                    chartBounds.bottom,
+                    fillColor,
+                    Color.parseColor("#00000000"),
+                    Shader.TileMode.CLAMP)
+            }
 
             setChartHighlightColor()
 
