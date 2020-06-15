@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
 import com.yabu.livechart.model.Dataset
@@ -177,6 +176,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Draw baseline flag.
      */
+    @Suppress("UNUSED")
     @PublicApi
     fun drawBaselineConditionalColor(): LiveChartView {
         drawBaselineConditionalColor = true
@@ -217,6 +217,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Draw last point label flag.
      */
+    @Suppress("UNUSED")
     @PublicApi
     fun drawLastPointLabel(): LiveChartView {
         drawLastPointLabel = true
@@ -227,6 +228,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Set [baseline] data point manually instead of determining from first dataset point.
      */
+    @Suppress("UNUSED")
     @PublicApi
     fun setBaselineManually(baseline: Float): LiveChartView {
         manualBaseline = true
@@ -569,6 +571,24 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
                 chartBounds.bottom,
                 boundsTextPaint)
 
+            // THIRD QUARTER BOUND
+            canvas.drawText("%.2f".format(dataset.upperBound()*0.75f),
+                chartBounds.end - TAG_WIDTH,
+                chartBounds.top + chartBounds.bottom/4,
+                boundsTextPaint)
+
+            // MIDDLE BOUND
+            canvas.drawText("%.2f".format(dataset.upperBound()/2),
+                chartBounds.end - TAG_WIDTH,
+                chartBounds.top + chartBounds.bottom/2,
+                boundsTextPaint)
+
+            // FIRST QUARTER BOUND
+            canvas.drawText("%.2f".format(dataset.upperBound()/4),
+                chartBounds.end - TAG_WIDTH,
+                chartBounds.top + chartBounds.bottom*0.75f,
+                boundsTextPaint)
+
             // UPPER BOUND
             canvas.drawText("%.2f".format(dataset.upperBound()),
                 chartBounds.end - TAG_WIDTH,
@@ -592,7 +612,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
                     endPointTagPaint)
 
                 canvas.drawText("%.2f".format(dataset.points.last().y),
-                    chartBounds.end - CHART_END_PADDING + TAG_PADDING,
+                    chartBounds.end - TAG_WIDTH,
                     dataset.points.last().y.yPointToPixels() - TAG_PADDING,
                     endPointTagTextPaint)
             }
