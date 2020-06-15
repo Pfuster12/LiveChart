@@ -42,7 +42,7 @@ The LiveChart library has just started out. Have a look at the roadmap for new f
 
 ## How to Use
 
-You'll need a reference to a LiveChart view first, either through XML or programmatically:
+You'll need a reference to a `LiveChartView` first, either through XML or programmatically:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
