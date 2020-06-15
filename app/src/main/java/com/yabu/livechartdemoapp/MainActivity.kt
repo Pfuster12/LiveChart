@@ -26,7 +26,14 @@ class MainActivity : AppCompatActivity() {
         livechartSimple.setDataset(dataset)
             .drawDataset()
 
-        val style = LiveChartStyle()
+        val style = LiveChartStyle().apply {
+            textColor = Color.BLUE
+            mainColor = Color.GREEN
+            mainFillColor = Color.MAGENTA
+            baselineColor = Color.BLUE
+            pathStrokeWidth = 12f
+            baselineStrokeWidth = 6f
+        }
 
         livechart.setDataset(dataset)
             .setLiveChartStyle(style)
