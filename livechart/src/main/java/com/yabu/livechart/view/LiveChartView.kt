@@ -84,6 +84,11 @@ class LiveChartView : View {
     private var drawFill = false
 
     /**
+     * Label last point.
+     */
+    private var drawLastPointLabel = false
+
+    /**
      * Manually set baseline flag.
      */
     private var manualBaseline = false
@@ -143,6 +148,16 @@ class LiveChartView : View {
     @PublicApi
     fun drawYBounds(): LiveChartView {
         drawYBounds = true
+
+        return this
+    }
+
+    /**
+     * Draw last point label flag.
+     */
+    @PublicApi
+    fun drawLastPointLabel(): LiveChartView {
+        drawLastPointLabel = true
 
         return this
     }
@@ -504,24 +519,27 @@ class LiveChartView : View {
                 chartBounds.top,
                 boundsTextPaint)
 
-            // draw end tag line
-            canvas.drawLine(chartBounds.start,
-                dataset.points.last().y.yPointToPixels(),
-                chartBounds.end - CHART_END_PADDING,
-                dataset.points.last().y.yPointToPixels(),
-                endPointLinePaint)
+            // Last Point Label
+            if (drawLastPointLabel) {
+                // draw end tag line
+                canvas.drawLine(chartBounds.start,
+                    dataset.points.last().y.yPointToPixels(),
+                    chartBounds.end - CHART_END_PADDING,
+                    dataset.points.last().y.yPointToPixels(),
+                    endPointLinePaint)
 
-            // TAG
-            canvas.drawRect(chartBounds.end - CHART_END_PADDING,
-                dataset.points.last().y.yPointToPixels() - TEXT_HEIGHT - TAG_PADDING,
-                chartBounds.end - CHART_END_PADDING + TAG_WIDTH,
-                dataset.points.last().y.yPointToPixels(),
-                endPointTagPaint)
+                // TAG
+                canvas.drawRect(chartBounds.end - CHART_END_PADDING,
+                    dataset.points.last().y.yPointToPixels() - TEXT_HEIGHT - TAG_PADDING,
+                    chartBounds.end - CHART_END_PADDING + TAG_WIDTH,
+                    dataset.points.last().y.yPointToPixels(),
+                    endPointTagPaint)
 
-            canvas.drawText("%.2f".format(dataset.points.last().y),
-                chartBounds.end - CHART_END_PADDING + TAG_PADDING,
-                dataset.points.last().y.yPointToPixels() - TAG_PADDING,
-                endPointTagTextPaint)
+                canvas.drawText("%.2f".format(dataset.points.last().y),
+                    chartBounds.end - CHART_END_PADDING + TAG_PADDING,
+                    dataset.points.last().y.yPointToPixels() - TAG_PADDING,
+                    endPointTagTextPaint)
+            }
         }
     }
 
