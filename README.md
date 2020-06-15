@@ -100,6 +100,34 @@ livechart.setDataset(dataset)
 
 Refer to the screenshot to view the different options and color change on below baseline/above baseline.
 
+## Styling
+
+Since v1.1.0 LiveChart supports custom styling of almost all its interface 
+through the `LiveChartStyle` class. The style object contains all available styling options as 
+properties you can change:
+
+```kotlin
+style = LiveChartStyle().apply {
+    textColor = Color.WHITE
+    mainColor = Color.BLACK
+    mainFillColor = Color.BLACK
+    baselineColor = Color.GRAY
+    pathStrokeWidth = 4f
+    baselineStrokeWidth = 4f
+}
+
+livechart.setDataset(dataset)
+    .setLiveChartStyle(style)
+    .drawYBounds()
+    .drawBaseline()
+    .drawFill()
+    .drawDataset()
+```
+
+For the full set of attributes available to customise refer to the LiveChartStyle reference.
+Any attribute not explicitly set fallback to the LiveChartAttributes object defaults you can view in the
+reference too.
+
 ## Second Dataset
 
 The library allows for powerful comparisons by drawing a second dataset on the same chart. The
