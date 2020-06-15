@@ -136,22 +136,46 @@ reference too.
 ## Second Dataset
 
 The library allows for powerful comparisons by drawing a second dataset on the same chart. The
-second dataset defaults to a grey color but you can set the color manually:
+second dataset defaults to a grey color but you can set the color manually through the style object:
 
 ```kotlin
-val firstDataset = Dataset(mutableListOf(DataPoint(0f, 1f),
-    DataPoint(1f, 3f),
-    DataPoint(2f, 6f)))
-    
- val secondDataset = Dataset(mutableListOf(DataPoint(3f, 0f),
-    DataPoint(4f, 10f),
-    DataPoint(6f, 2f)))
+ val firstDataset = Dataset(mutableListOf(DataPoint(0f, 1f),
+            DataPoint(1f, 2f),
+            DataPoint(2f, 3f),
+            DataPoint(3f, 4f),
+            DataPoint(4f, 5f),
+            DataPoint(5f, 8f),
+            DataPoint(6f, 13f),
+            DataPoint(7f, 21f)
+        ))
 
-livechart.setDataset(dataset)
-    .setSecondDataset(secondDataset)
-    .setSecondDatasetColor(Color.BLACK)
-    .drawDataset()
+        val secondDataset = Dataset(mutableListOf(DataPoint(0f, 0f),
+            DataPoint(1f, 1f),
+            DataPoint(2f, 2f),
+            DataPoint(3f, 3f),
+            DataPoint(4f, 4f),
+            DataPoint(5f, 5f),
+            DataPoint(6f, 10f),
+            DataPoint(7f, 18f)
+        ))
+
+        val style = LiveChartStyle().apply {
+            mainColor = Color.GRAY
+            secondColor = Color.MAGENTA
+            pathStrokeWidth = 8f
+            secondPathStrokeWidth = 8f
+        }
+
+        livechart.setDataset(firstDataset)
+            .setSecondDataset(secondDataset)
+            .setLiveChartStyle(style)
+            .drawYBounds()
+            .drawDataset()
 ```
+
+This results in the following chart:
+
+<img src="/.sample-images/livechart_second_dataset_example_1.png" height="120"/>
 
 ## Things to consider
 
@@ -159,8 +183,8 @@ LiveChart tries to leave a minimal footprint as possible, extending from the bui
 class to perform the draw operations. It follows best practice advice to only perform draw ops
 and avoid setting any variables to memory during the `onDraw()` call.
 
-HOWEVER, drawing big datasets is a costly operation and the Android UI will appear 'janky' if you
+**HOWEVER**, drawing big datasets is a costly operation and the Android UI will appear 'janky' if you
 are not careful with the amount of data you feed in. 
 
-Good Android behavior is to only draw the necessary data points, avoid calling `drawDataset()` repeatedly
+A good Android citizen will only draw the necessary data points, avoid calling `drawDataset()` repeatedly
 and not animate the `LiveChartView` excessively.
