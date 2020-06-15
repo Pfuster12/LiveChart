@@ -4,7 +4,7 @@
 
 LiveChart is an open-source Android library to draw beautiful yet powerful charts. The library allows for color and data display customization, in an easy to learn, descriptive API.
 
-<img src="https://github.com/Pfuster12/LiveChart/blob/master/.sample-images/livechart_sample.png" height="680"/>
+<img src="/.sample-images/livechart_sample.png" height="680"/>
 
 Draw from a simple line to a fully tagged chart with bounds and baseline. The library is perfect (and started out) to draw financial charts where the baseline and color of the chart matters.
 
@@ -126,7 +126,7 @@ livechart.setDataset(dataset)
 
 The above example would result in a rather horrible (yet accurate) view of:
 
-<img src="https://github.com/Pfuster12/LiveChart/blob/master/.sample-images/livechart_styling_example_1.png" height="340"/>
+<img src="/.sample-images/livechart_styling_example_1.png" height="340"/>
 
 For the full set of attributes available to customise refer to the LiveChartStyle reference.
 Any attributes not explicitly set fallback to the LiveChartAttributes object defaults you can view in the
