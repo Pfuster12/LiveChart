@@ -1,5 +1,7 @@
 package com.yabu.livechart.view
 
+import android.graphics.Color
+
 internal object LiveChartAttributes {
     const val STROKE_WIDTH = 4f
 
@@ -9,7 +11,13 @@ internal object LiveChartAttributes {
 
     const val DASH_LINE_STROKE = 10f
 
+    const val TEXT_COLOR = Color.BLACK
+
+    const val MAIN_COLOR = Color.BLACK
+
     const val POSITIVE_COLOR = "#01C194"
+
+    const val FILL_COLOR = "#11303030"
 
     const val POSITIVE_FILL_COLOR = "#1101C194"
 

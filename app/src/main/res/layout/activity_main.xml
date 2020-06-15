@@ -35,7 +35,7 @@
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/main_simple"
         app:layout_constraintBottom_toTopOf="@id/main_positive"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/main_positive"
@@ -75,6 +75,13 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_negative"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        app:labelTextColor="@color/colorAccent"
+        app:pathColor="@color/colorAccent"
+        app:pathStrokeWidth="4dp"
+        app:baselineStrokeWidth="4dp"
+        app:baselineDashGap="8dp"
+        app:labelTextHeight="20sp"
+        app:baselineColor="@color/colorPrimaryDark"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

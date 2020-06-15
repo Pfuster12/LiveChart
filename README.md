@@ -4,7 +4,7 @@
 
 LiveChart is an open-source Android library to draw beautiful yet powerful charts. The library allows for color and data display customization, in an easy to learn, descriptive API.
 
-<img src="https://github.com/Pfuster12/LiveChart/blob/master/livechart_sample.png" height="680"/>
+<img src="/.sample-images/livechart_sample.png" height="680"/>
 
 Draw from a simple line to a fully tagged chart with bounds and baseline. The library is perfect (and started out) to draw financial charts where the baseline and color of the chart matters.
 
@@ -42,9 +42,34 @@ The LiveChart library has just started out. Have a look at the roadmap for new f
 
 ## How to Use
 
+You'll need a reference to a `LiveChartView` first, either through XML or programmatically:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    tools:context=".MainActivity">
+
+    <com.yabu.livechart.view.LiveChartView
+        android:id="@+id/live_chart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
+
+</FrameLayout>
+```
+
+```kotlin
+val liveChart = findViewById(R.id.live_chart)
+```
+
 LiveChart knows how to draw from a `Dataset` only. Create a new dataset containing a list of `DataPoint`'s:
 
 ```kotlin
+val liveChart = findViewById(R.id.live_chart)
+
  val dataset = Dataset(mutableListOf(DataPoint(0f, 1f),
     DataPoint(1f, 3f),
     DataPoint(2f, 6f)))
@@ -53,6 +78,8 @@ LiveChart knows how to draw from a `Dataset` only. Create a new dataset containi
 In order to begin the draw operation, the library uses a chainable, descriptive public API:
 
 ```kotlin
+val liveChart = findViewById(R.id.live_chart)
+
  val dataset = Dataset(mutableListOf(DataPoint(0f, 1f),
     DataPoint(1f, 3f),
     DataPoint(2f, 6f)))
@@ -78,8 +105,8 @@ livechart.setDataset(dataset)
     .drawDataset()
 ```
 
-Or provide the full set of display capabilities by adding a baseline line, a gradient fill and
-the axis bounds with text data points:
+Or provide the full set of display capabilities by adding a baseline, a gradient fill and
+the axis bounds with data labels:
 
 ```kotlin
  val dataset = Dataset(mutableListOf(DataPoint(0f, 1f),
@@ -89,36 +116,124 @@ the axis bounds with text data points:
 livechart.setDataset(dataset)
      // Draws the Y Axis bounds with Text data points.
     .drawYBounds()
-    // Draws a customizable base line from the first point of the dataset or manually set a datapoint
+    // Draws a customizable base line from the first point of the dataset or manually set a data point
     .drawBaseline()
     // Set manually the data point from where the baseline draws,
-    .setBaselineManually()
-    // draws a gradient fill on the chart line,
-    .drawFill()
+    .setBaselineManually(1.5f)
+    // Draws a fill on the chart line. You can set whether to draw with a transparent gradient
+    // or a solid fill. Defaults to gradient.
+    .drawFill(withGradient = true)
+    // draws the color of the path and fill conditional to being above/below the baseline datapoint
+    .drawBaselineConditionalColor()
     .drawDataset()
 ```
 
 Refer to the screenshot to view the different options and color change on below baseline/above baseline.
 
-## Second Dataset
+You can find all the possible draw options under the API reference.
 
-The library allows for powerful comparisons by drawing a second dataset on the same chart. The
-second dataset defaults to a grey color but you can set the color manually:
+## Styling
+
+### Style Programmatically
+
+Since `v1.1.0` LiveChart supports custom styling of almost all its interface 
+through the `LiveChartStyle` class. The style object contains all available styling options as 
+properties you can change:
 
 ```kotlin
-val firstDataset = Dataset(mutableListOf(DataPoint(0f, 1f),
-    DataPoint(1f, 3f),
-    DataPoint(2f, 6f)))
-    
- val secondDataset = Dataset(mutableListOf(DataPoint(3f, 0f),
-    DataPoint(4f, 10f),
-    DataPoint(6f, 2f)))
+val style = LiveChartStyle().apply {
+    textColor = Color.BLUE
+    textHeight = 30f 
+    mainColor = Color.GREEN
+    mainFillColor = Color.MAGENTA
+    baselineColor = Color.BLUE
+    pathStrokeWidth = 12f
+    baselineStrokeWidth = 6f
+}
 
+// Pass the styling object to the view through the method setLiveChartStyle(style: LiveChartStyle)
 livechart.setDataset(dataset)
-    .setSecondDataset(secondDataset)
-    .setSecondDatasetColor(Color.BLACK)
+    .setLiveChartStyle(style)
+    .drawBaseline()
+    .drawFill(withGradient = true)
+    .drawYBounds()
     .drawDataset()
 ```
+
+The above example would result in a rather horrible (yet accurate) view of:
+
+<img src="/.sample-images/livechart_styling_example_1.png" height="120"/>
+
+For the full set of attributes available to customise refer to the `LiveChartStyle` reference.
+Any attributes not explicitly set fallback to the `LiveChartAttributes` object defaults you can view in the
+reference too.
+
+### Style with XML
+
+You can also style a number of attributes through the XML layout attributes. For example:
+
+```xml
+    <com.yabu.livechart.view.LiveChartView
+        android:id="@+id/live_chart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:labelTextColor="@color/colorAccent"
+        app:pathColor="@color/colorAccent"
+        app:pathStrokeWidth="4dp"
+        app:baselineStrokeWidth="4dp"
+        app:baselineDashGap="8dp"
+        app:labelTextHeight="14sp"
+        app:baselineColor="@color/colorPrimaryDark"/>
+```
+
+For a full set of available attributes you can check the `LiveChartView` reference.
+
+## Second Dataset
+
+The library allows for data comparisons by drawing a second dataset on the same chart. The
+second dataset defaults to a grey color but you can set the color manually through the style object:
+
+```kotlin
+ val firstDataset = Dataset(mutableListOf(DataPoint(0f, 1f),
+    DataPoint(1f, 2f),
+    DataPoint(2f, 3f),
+    DataPoint(3f, 4f),
+    DataPoint(4f, 5f),
+    DataPoint(5f, 8f),
+    DataPoint(6f, 13f),
+    DataPoint(7f, 21f)
+))
+
+val secondDataset = Dataset(mutableListOf(DataPoint(0f, 0f),
+    DataPoint(1f, 1f),
+    DataPoint(2f, 2f),
+    DataPoint(3f, 3f),
+    DataPoint(4f, 4f),
+    DataPoint(5f, 5f),
+    DataPoint(6f, 10f),
+    DataPoint(7f, 18f)
+))
+
+val style = LiveChartStyle().apply {
+    mainColor = Color.GRAY
+    secondColor = Color.MAGENTA
+    pathStrokeWidth = 8f
+    secondPathStrokeWidth = 8f
+}
+
+livechart.setDataset(firstDataset)
+    .setSecondDataset(secondDataset)
+    .setLiveChartStyle(style)
+    .drawYBounds()
+    .drawDataset()
+```
+
+This results in the following chart:
+
+<img src="/.sample-images/livechart_second_dataset_example_1.PNG" height="120"/>
+
+> **NOTE** Want more than two datasets? Don't worry, the project roadmap intends to support drawing 
+> an unlimited number of datasets provided in a list. 
 
 ## Things to consider
 
@@ -126,8 +241,8 @@ LiveChart tries to leave a minimal footprint as possible, extending from the bui
 class to perform the draw operations. It follows best practice advice to only perform draw ops
 and avoid setting any variables to memory during the `onDraw()` call.
 
-HOWEVER, drawing big datasets is a costly operation and the Android UI will appear 'janky' if you
+**HOWEVER**, drawing big datasets is a costly operation and the Android UI will appear 'janky' if you
 are not careful with the amount of data you feed in. 
 
-Good Android behavior is to only draw the necessary data points, avoid calling `drawDataset()` repeatedly
+A good Android citizen will only draw the necessary data points, avoid calling `drawDataset()` repeatedly
 and not animate the `LiveChartView` excessively.
