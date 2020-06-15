@@ -78,7 +78,7 @@ livechart.setDataset(dataset)
     .drawDataset()
 ```
 
-Or provide the full set of display capabilities by adding a baseline line, a gradient fill and
+Or provide the full set of display capabilities by adding a baseline, a gradient fill and
 the axis bounds with text data points:
 
 ```kotlin
@@ -102,7 +102,7 @@ Refer to the screenshot to view the different options and color change on below 
 
 ## Styling
 
-Since v1.1.0 LiveChart supports custom styling of almost all its interface 
+Since `v1.1.0` LiveChart supports custom styling of almost all its interface 
 through the `LiveChartStyle` class. The style object contains all available styling options as 
 properties you can change:
 
@@ -116,16 +116,16 @@ style = LiveChartStyle().apply {
     baselineStrokeWidth = 4f
 }
 
+// Pass the styling object to the view through the method setLiveChartStyle(style: LiveChartStyle)
 livechart.setDataset(dataset)
     .setLiveChartStyle(style)
-    .drawYBounds()
     .drawBaseline()
     .drawFill()
     .drawDataset()
 ```
 
 For the full set of attributes available to customise refer to the LiveChartStyle reference.
-Any attribute not explicitly set fallback to the LiveChartAttributes object defaults you can view in the
+Any attributes not explicitly set fallback to the LiveChartAttributes object defaults you can view in the
 reference too.
 
 ## Second Dataset
