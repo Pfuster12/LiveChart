@@ -133,6 +133,8 @@ You can find all the possible draw options under the API reference.
 
 ## Styling
 
+### Style Programmatically
+
 Since `v1.1.0` LiveChart supports custom styling of almost all its interface 
 through the `LiveChartStyle` class. The style object contains all available styling options as 
 properties you can change:
@@ -163,6 +165,25 @@ The above example would result in a rather horrible (yet accurate) view of:
 For the full set of attributes available to customise refer to the `LiveChartStyle` reference.
 Any attributes not explicitly set fallback to the `LiveChartAttributes` object defaults you can view in the
 reference too.
+
+### Style with XML
+
+You can also style a number of attributes through the XML layout attributes. For example:
+
+```xml
+    <com.yabu.livechart.view.LiveChartView
+        android:id="@+id/live_chart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:labelTextColor="@color/colorAccent"
+        app:pathColor="@color/colorAccent"
+        app:pathStrokeWidth="4dp"
+        app:baselineStrokeWidth="4dp"
+        app:baselineDashGap="8dp"
+        app:baselineColor="@color/colorPrimaryDark"/>
+```
+
+For a full set of available attributes you can check the `LiveChartView` reference.
 
 ## Second Dataset
 
