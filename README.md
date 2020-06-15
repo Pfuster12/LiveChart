@@ -178,7 +178,7 @@ second dataset defaults to a grey color but you can set the color manually throu
 
 This results in the following chart:
 
-<img src="/.sample-images/livechart_second_dataset_example_1.png" height="120"/>
+<img src="/.sample-images/livechart_second_dataset_example_1.PNG" height="120"/>
 
 > **NOTE** Want more than two datasets? Don't worry, the project roadmap intends to support drawing 
 > an unlimited number of datasets provided in a list. 
