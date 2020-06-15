@@ -121,6 +121,7 @@ livechart.setDataset(dataset)
     .setLiveChartStyle(style)
     .drawBaseline()
     .drawFill()
+    .drawYBounds()
     .drawDataset()
 ```
 
