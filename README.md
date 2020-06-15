@@ -126,7 +126,7 @@ livechart.setDataset(dataset)
 
 The above example would result in a rather horrible (yet accurate) view of:
 
-<img src="/.sample-images/livechart_styling_example_1.png" height="340"/>
+<img src="/.sample-images/livechart_styling_example_1.png" height="120"/>
 
 For the full set of attributes available to customise refer to the LiveChartStyle reference.
 Any attributes not explicitly set fallback to the LiveChartAttributes object defaults you can view in the
