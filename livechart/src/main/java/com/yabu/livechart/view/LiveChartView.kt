@@ -26,18 +26,7 @@ import kotlin.math.min
  * The end data point can be tagged with a label and draw a line across the chart, with highlighted
  * color according to the baseline.
  */
-class LiveChartView : View {
-    constructor(context: Context?) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
-    )
-
-    init {
-        clipToOutline = false
-    }
+class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
     private var chartBounds = Bounds(
         top = paddingTop.toFloat(),
@@ -101,11 +90,42 @@ class LiveChartView : View {
      */
     private var manualBaseline = false
 
-    /**
-     * Second data set path color.
-     */
-    private var secondDatasetPathColor = ContextCompat.getColor(context,
-        R.color.secondDataset)
+    init {
+        clipToOutline = false
+
+        // Gather the xml attributes to style the chart,
+        context?.theme?.obtainStyledAttributes(
+            attrs,
+            R.styleable.LiveChart,
+            0, 0)?.apply {
+
+            try {
+                // Color attrs,
+                chartStyle.mainColor = getColor(R.styleable.LiveChart_pathColor,
+                    chartStyle.mainColor)
+                chartStyle.baselineColor = getColor(R.styleable.LiveChart_baselineColor,
+                    chartStyle.baselineColor)
+                chartStyle.mainFillColor = getColor(R.styleable.LiveChart_fillColor,
+                    chartStyle.mainFillColor)
+                chartStyle.textColor = getColor(R.styleable.LiveChart_labelTextColor,
+                    chartStyle.textColor)
+                chartStyle.positiveColor = getColor(R.styleable.LiveChart_positiveColor,
+                    chartStyle.positiveColor)
+                chartStyle.negativeColor = getColor(R.styleable.LiveChart_negativeColor,
+                    chartStyle.negativeColor)
+
+                // Width attrs,
+                chartStyle.pathStrokeWidth = getDimension(R.styleable.LiveChart_pathStrokeWidth,
+                    chartStyle.pathStrokeWidth)
+                chartStyle.baselineStrokeWidth = getDimension(R.styleable.LiveChart_baselineStrokeWidth,
+                    chartStyle.baselineStrokeWidth)
+                chartStyle.baselineDashLineGap = getDimension(R.styleable.LiveChart_baselineDashGap,
+                    chartStyle.baselineDashLineGap)
+            } finally {
+                recycle()
+            }
+        }
+    }
 
     /**
      * Set the [dataset] of this chart.
@@ -269,7 +289,7 @@ class LiveChartView : View {
     private var secondDatasetPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = chartStyle.secondPathStrokeWidth
-        color = secondDatasetPathColor
+        color = chartStyle.secondColor
         strokeCap = Paint.Cap.BUTT
         strokeJoin = Paint.Join.MITER
     }

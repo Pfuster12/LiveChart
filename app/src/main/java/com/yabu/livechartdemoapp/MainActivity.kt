@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         livechartNegative.setDataset(negativeDataset)
             .drawYBounds()
             .drawBaseline()
-            .drawFill()
+            .drawFill(false)
             .drawDataset()
     }
 }

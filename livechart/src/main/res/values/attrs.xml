@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LiveChart">
+        <attr name="labelTextColor" format="reference|color" />
+        <attr name="pathColor" format="reference|color"/>
+        <attr name="fillColor" format="reference|color"/>
+        <attr name="baselineColor" format="reference|color"/>
+        <attr name="positiveColor" format="reference|color"/>
+        <attr name="negativeColor" format="reference|color"/>
+        <attr name="pathStrokeWidth" format="dimension"/>
+        <attr name="baselineStrokeWidth" format="dimension"/>
+        <attr name="baselineDashGap" format="dimension"/>
+    </declare-styleable>
+</resources>
