@@ -1,7 +1,9 @@
 package com.yabu.livechartdemoapp
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.yabu.livechart.view.LiveChartStyle
 import com.yabu.livechart.view.LiveChartView
 
 class MainActivity : AppCompatActivity() {
@@ -21,13 +23,16 @@ class MainActivity : AppCompatActivity() {
 
         val negativeDataset = SampleData.createNegativeSampleData()
 
+        livechartSimple.setDataset(dataset)
+            .drawDataset()
+
+        val style = LiveChartStyle()
+
         livechart.setDataset(dataset)
+            .setLiveChartStyle(style)
             .drawYBounds()
             .drawBaseline()
             .drawFill()
-            .drawDataset()
-
-        livechartSimple.setDataset(dataset)
             .drawDataset()
 
         livechartNegative.setDataset(negativeDataset)

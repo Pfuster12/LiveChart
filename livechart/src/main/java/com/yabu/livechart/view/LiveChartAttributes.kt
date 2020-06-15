@@ -11,6 +11,8 @@ internal object LiveChartAttributes {
 
     const val POSITIVE_COLOR = "#01C194"
 
+    const val FILL_COLOR = "#11303030"
+
     const val POSITIVE_FILL_COLOR = "#1101C194"
 
     const val NEGATIVE_COLOR = "#d70a53"
