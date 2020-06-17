@@ -575,20 +575,23 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
                 chartBounds.bottom,
                 boundsTextPaint)
 
-            // THIRD QUARTER BOUND
-            canvas.drawText("%.2f".format(dataset.upperBound()*0.75f),
+            // FIRST QUARTER BOUND
+            canvas.drawText(
+                "%.2f".format(dataset.upperBound()-(dataset.upperBound() - dataset.lowerBound())/4),
                 chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
-                chartBounds.top + chartBounds.bottom/4,
+                chartBounds.top + chartBounds.bottom/4f,
                 boundsTextPaint)
 
             // MIDDLE BOUND
-            canvas.drawText("%.2f".format(dataset.upperBound()/2),
+            canvas.drawText(
+                "%.2f".format(dataset.upperBound()-(dataset.upperBound() - dataset.lowerBound())/2),
                 chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
-                chartBounds.top + chartBounds.bottom/2,
+                chartBounds.top + chartBounds.bottom/2f,
                 boundsTextPaint)
 
-            // FIRST QUARTER BOUND
-            canvas.drawText("%.2f".format(dataset.upperBound()/4),
+            // THIRD QUARTER BOUND
+            canvas.drawText(
+                "%.2f".format(dataset.upperBound()-(dataset.upperBound() - dataset.lowerBound())*0.75f),
                 chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.top + chartBounds.bottom*0.75f,
                 boundsTextPaint)
