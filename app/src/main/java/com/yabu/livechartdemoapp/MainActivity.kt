@@ -1,17 +1,23 @@
 package com.yabu.livechartdemoapp
 
 import android.graphics.Color
+import android.graphics.Path
+import android.graphics.PathMeasure
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.MotionEvent
 import com.yabu.livechart.model.DataPoint
 import com.yabu.livechart.model.Dataset
 import com.yabu.livechart.view.LiveChartStyle
+import com.yabu.livechart.view.LiveChartTouchOverlay
 import com.yabu.livechart.view.LiveChartView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var livechart: LiveChartView
     private lateinit var livechartSimple: LiveChartView
     private lateinit var livechartNegative: LiveChartView
+    private lateinit var livechartOverlay: LiveChartTouchOverlay
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         livechart = findViewById(R.id.main_live_chart)
         livechartSimple = findViewById(R.id.main_simple_live_chart)
+        livechartOverlay = findViewById(R.id.main_touch_overlay)
         livechartNegative = findViewById(R.id.main_negative_live_chart)
 
         val dataset = SampleData.createSampleData()
@@ -27,6 +34,9 @@ class MainActivity : AppCompatActivity() {
 
         livechartSimple.setDataset(dataset)
             .drawDataset()
+
+        livechartOverlay.setDataset(dataset)
+            .bindOverlay()
 
         val firstDataset = Dataset(mutableListOf(DataPoint(0f, 1f),
             DataPoint(1f, 2f),

@@ -29,13 +29,24 @@
         android:textStyle="bold"
         android:padding="16dp"/>
 
-    <com.yabu.livechart.view.LiveChartView
-        android:id="@+id/main_simple_live_chart"
+    <FrameLayout
+        android:id="@+id/main_simple_live_chart_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/main_simple"
         app:layout_constraintBottom_toTopOf="@id/main_positive"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp">
+
+        <com.yabu.livechart.view.LiveChartView
+            android:id="@+id/main_simple_live_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.yabu.livechart.view.LiveChartTouchOverlay
+            android:id="@+id/main_touch_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/main_positive"
@@ -44,7 +55,7 @@
         android:text="@string/positive_livechart_sample"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/main_live_chart"
-        app:layout_constraintTop_toBottomOf="@id/main_simple_live_chart"
+        app:layout_constraintTop_toBottomOf="@id/main_simple_live_chart_layout"
         style="@style/TextAppearance.AppCompat.Caption"
         android:textStyle="bold"
         android:padding="16dp"/>
