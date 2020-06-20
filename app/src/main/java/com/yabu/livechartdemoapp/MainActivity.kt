@@ -1,18 +1,13 @@
 package com.yabu.livechartdemoapp
 
+import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.Path
-import android.graphics.PathMeasure
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.MotionEvent
+import androidx.appcompat.app.AppCompatActivity
 import com.yabu.livechart.model.DataPoint
 import com.yabu.livechart.model.Dataset
 import com.yabu.livechart.view.LiveChart
 import com.yabu.livechart.view.LiveChartStyle
-import com.yabu.livechart.view.LiveChartTouchOverlay
-import com.yabu.livechart.view.LiveChartView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -55,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         livechartSimple.setDataset(dataset)
             .setLiveChartStyle(chartStyle)
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
+                @SuppressLint("SetTextI18n")
                 override fun onTouchCallback(point: DataPoint) {
                     main_simple_data_point.text = "(${"%.2f".format(point.x)}, ${"%.2f".format(point.y)})"
                 }
@@ -82,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         livechart.setDataset(firstDataset)
             .setSecondDataset(secondDataset)
             .setLiveChartStyle(style)
+            .disableTouchOverlay()
             .drawYBounds()
             .drawDataset()
 
