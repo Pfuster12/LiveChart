@@ -161,6 +161,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
         // paint color
         datasetLinePaint.color = chartStyle.mainColor
         datasetFillPaint.color =chartStyle.mainFillColor
+        yBoundLinePaint.color =chartStyle.boundsLineColor
         baselinePaint.color = chartStyle.baselineColor
         boundsTextPaint.color = chartStyle.textColor
         secondDatasetPaint.color = chartStyle.secondColor
@@ -328,7 +329,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     private var yBoundLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 1f
-        color = Color.GRAY
+        color = chartStyle.boundsLineColor
         strokeCap = Paint.Cap.SQUARE
     }
 

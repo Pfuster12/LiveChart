@@ -53,6 +53,11 @@ class LiveChartStyle {
     var baselineColor: Int = Color.GRAY
 
     /**
+     * Baseline color.
+     */
+    var boundsLineColor: Int = Color.GRAY
+
+    /**
      * Path stroke width
      */
     var pathStrokeWidth = LiveChartAttributes.STROKE_WIDTH
