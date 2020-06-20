@@ -1,15 +1,12 @@
 package com.yabu.livechart.view
 
-import android.R.attr.path
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.DashPathEffect
 import android.graphics.Path
 import android.graphics.PathMeasure
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -18,21 +15,16 @@ import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
 import com.yabu.livechart.model.Dataset
 import com.yabu.livechart.utils.PublicApi
-
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Touch overlay for the [LiveChartView]. Perform touch event draws in this class
  * instead of the LiveChart to avoid unnecessary expensive onDraw calls.
  * For example, the horizontal drag DataPoint slider.
  */
-class LiveChartTouchOverlay : FrameLayout {
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
-    )
+class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
+    : FrameLayout(context, attrs) {
 
     /**
      * The chart bounds in the screen pixel space
@@ -51,11 +43,7 @@ class LiveChartTouchOverlay : FrameLayout {
 
     private var overlayPoint: View
 
-    init {
-        overlayPoint = overlay.findViewById(R.id.touch_overlay_point)
-        overlay.alpha = 0f
-        this.addView(overlay)
-    }
+    private var overlayLine: View
 
     /**
      * Baseline to determine paint color from data end point.
@@ -68,6 +56,11 @@ class LiveChartTouchOverlay : FrameLayout {
     private var dataset: Dataset = Dataset.new()
 
     /**
+     * Second dataset
+     */
+    private var secondDataset: Dataset = Dataset.new()
+
+    /**
      * Path generated from dataset points.
      */
     private val pathMeasure = PathMeasure()
@@ -76,6 +69,37 @@ class LiveChartTouchOverlay : FrameLayout {
      * Y Bounds display flag.
      */
     private var drawYBounds = false
+
+    init {
+        clipChildren = false
+
+        overlayLine = overlay.findViewById(R.id.touch_overlay_line)
+        overlayPoint = overlay.findViewById(R.id.touch_overlay_point)
+        overlay.alpha = 0f
+
+        // Gather the xml attributes to style the chart,
+        context.theme?.obtainStyledAttributes(
+            attrs,
+            R.styleable.LiveChart,
+            0, 0)?.apply {
+
+            try {
+                // Color attrs,
+                chartStyle.overlayLineColor = getColor(R.styleable.LiveChart_overlayLineColor,
+                    chartStyle.overlayLineColor)
+                chartStyle.overlayCircleColor = getColor(R.styleable.LiveChart_overlayCircleColor,
+                    chartStyle.overlayCircleColor)
+                chartStyle.overlayCircleDiameter = getDimension(R.styleable.LiveChart_overlayCircleDiameter,
+                    chartStyle.overlayCircleDiameter)
+            } finally {
+                recycle()
+            }
+        }
+
+        setLiveChartStyle(chartStyle)
+
+        this.addView(overlay)
+    }
 
     /**
      * Draw Y bounds flag.
@@ -99,10 +123,36 @@ class LiveChartTouchOverlay : FrameLayout {
     }
 
     /**
-     * Attach the overlay to the dataset set in this [LiveChartTouchOverlay].
+     * Set the Second [dataset] of this chart.
+     */
+    fun setSecondDataset(dataset: Dataset): LiveChartTouchOverlay {
+        this.secondDataset = dataset
+        return this
+    }
+
+    /**
+     * Set the style object [LiveChartStyle] to this overlay.
      */
     @PublicApi
-    fun bindOverlay() {
+    fun setLiveChartStyle(style: LiveChartStyle): LiveChartTouchOverlay {
+        chartStyle = style
+
+        val lp = overlayPoint.layoutParams
+        lp.width = chartStyle.overlayCircleDiameter.toInt()
+        lp.height = chartStyle.overlayCircleDiameter.toInt()
+        overlayPoint.layoutParams = lp
+
+        overlayLine.setBackgroundColor(chartStyle.overlayLineColor)
+        overlayPoint.backgroundTintList = ColorStateList.valueOf(chartStyle.overlayCircleColor)
+
+        return this
+    }
+
+    /**
+     * Bind the overlay to the dataset set in this [LiveChartTouchOverlay].
+     */
+    @PublicApi
+    fun bindToDataset() {
         this.post {
             val path = Path().apply {
                 dataset.points.forEachIndexed { index, point ->
@@ -124,27 +174,45 @@ class LiveChartTouchOverlay : FrameLayout {
             invalidate()
         }
     }
-
     /**
      * Find the bounds data point to screen pixels ratio for the Y Axis.
      */
     private fun yBoundsToPixels(): Float {
-        return (dataset.upperBound() - dataset.lowerBound()) / chartBounds.bottom
+        return if (secondDataset.hasData()) {
+            (max(dataset.upperBound(),
+                secondDataset.upperBound()) -
+                    min(dataset.lowerBound(),
+                        secondDataset.lowerBound())) / chartBounds.bottom
+        } else {
+            (dataset.upperBound() - dataset.lowerBound()) / chartBounds.bottom
+        }
     }
 
     /**
      * Transform a Y Axis data point to screen pixels within bounds.
      */
     private fun Float.yPointToPixels(): Float {
-        return chartBounds.bottom - ((this - dataset.lowerBound()) / yBoundsToPixels())
+        return if (secondDataset.hasData()) {
+            chartBounds.bottom -
+                    ((this - min(dataset.lowerBound(), secondDataset.lowerBound())) /
+                            yBoundsToPixels())
+        } else {
+            chartBounds.bottom - ((this - dataset.lowerBound()) / yBoundsToPixels())
+        }
     }
 
     /**
      * Find the bounds data point to screen pixels ratio for the X Axis.
      */
     private fun xBoundsToPixels(): Float {
-        return  dataset.points.last().x /
+        return if (secondDataset.hasData()) {
+            (max(dataset.points.last().x, secondDataset.points.last().x) -
+                    min(dataset.points.first().x, secondDataset.points.first().x)) /
                     (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
+        } else {
+            dataset.points.last().x /
+                    (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
+        }
     }
 
     /**
@@ -159,7 +227,8 @@ class LiveChartTouchOverlay : FrameLayout {
         val coordinates = FloatArray(2)
         return when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                val xNormalise = event.x / chartBounds.end
+                val xNormalise = event.x /
+                        (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
 
                 overlay.alpha = 1f
 
@@ -168,13 +237,14 @@ class LiveChartTouchOverlay : FrameLayout {
                     coordinates,
                     null)
 
-                overlay.x = coordinates[0] - 6f
-                overlayPoint.y = coordinates[1] - 6f
+                overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+                overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
                 true
             }
 
             MotionEvent.ACTION_MOVE -> {
-                val xNormalise = event.x / chartBounds.end
+                val xNormalise = event.x /
+                        (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
 
                 // Position overlay in coordinate,
                 // Get coordinate in path from x
@@ -182,8 +252,8 @@ class LiveChartTouchOverlay : FrameLayout {
                     coordinates,
                     null)
 
-                overlay.x = coordinates[0] - 6f
-                overlayPoint.y = coordinates[1] - 6f
+                overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+                overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
                 true
             }
 

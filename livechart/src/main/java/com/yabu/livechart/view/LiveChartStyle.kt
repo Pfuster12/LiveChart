@@ -86,4 +86,19 @@ class LiveChartStyle {
      * Chart text height
      */
     var textHeight = LiveChartAttributes.TEXT_HEIGHT
+
+    /**
+     * Overlay vertical line color.
+     */
+    var overlayLineColor = LiveChartAttributes.OVERLAY_LINE_COLOR
+
+    /**
+     * Overlay livechart_circle color.
+     */
+    var overlayCircleColor = LiveChartAttributes.OVERLAY_CIRCLE_COLOR
+
+    /**
+     * Overlay livechart_circle diameter.
+     */
+    var overlayCircleDiameter = LiveChartAttributes.OVERLAY_CIRCLE_DIAMETER
 }

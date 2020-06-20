@@ -14,16 +14,9 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * A Live Chart displays a 2 Dimensional lined data points, with an optional live
- * subscription to push new data points to the end of the data set.
- *
- * The chart can have a baseline onto which the end point data set is compared to determine whether
- * it has positive or negative change, and highlights the data set accordingly with color.
- *
- * The end data point can be tagged with a label and draw a line across the chart, with highlighted
- * color according to the baseline.
+ * Base [View] subclass handling the drawing of dataset paths and chart bounds.
  */
-class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
+class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     /**
      * The chart bounds in the screen pixel space
@@ -54,6 +47,16 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
      * Second dataset
      */
     private var secondDataset: Dataset = Dataset.new()
+
+    /**
+     * The upper bound of this chart's dataset's.
+     */
+    private var upperBound = 0f
+
+    /**
+     * The lowest bound of this chart's dataset's.
+     */
+    private var lowerBound: Float = 0f
 
     /**
      * Y Bounds display flag.
@@ -94,7 +97,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
         clipToOutline = false
 
         // Gather the xml attributes to style the chart,
-        context?.theme?.obtainStyledAttributes(
+        context.theme?.obtainStyledAttributes(
             attrs,
             R.styleable.LiveChart,
             0, 0)?.apply {
@@ -133,7 +136,6 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Set the [dataset] of this chart.
      */
-    @PublicApi
     fun setDataset(dataset: Dataset): LiveChartView {
         this.dataset = dataset
         return this
@@ -142,7 +144,6 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Set the Second [dataset] of this chart.
      */
-    @PublicApi
     fun setSecondDataset(dataset: Dataset): LiveChartView {
         this.secondDataset = dataset
         return this
@@ -151,7 +152,6 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Set the style object [LiveChartStyle] to this chart.
      */
-    @PublicApi
     fun setLiveChartStyle(style: LiveChartStyle): LiveChartView {
         chartStyle = style
 
@@ -181,7 +181,6 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
      * Draw baseline flag.
      */
     @Suppress("UNUSED")
-    @PublicApi
     fun drawBaselineConditionalColor(): LiveChartView {
         drawBaselineConditionalColor = true
 
@@ -191,7 +190,6 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Draw baseline flag.
      */
-    @PublicApi
     fun drawBaseline(): LiveChartView {
         drawBaseline = true
 
@@ -201,7 +199,6 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Draw Fill flag.
      */
-    @PublicApi
     fun drawFill(withGradient: Boolean = true): LiveChartView {
         drawFill = true
         drawGradientFill = withGradient
@@ -211,7 +208,6 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Draw Y bounds flag.
      */
-    @PublicApi
     fun drawYBounds(): LiveChartView {
         drawYBounds = true
 
@@ -222,7 +218,6 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
      * Draw last point label flag.
      */
     @Suppress("UNUSED")
-    @PublicApi
     fun drawLastPointLabel(): LiveChartView {
         drawLastPointLabel = true
 
@@ -233,7 +228,6 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
      * Set [baseline] data point manually instead of determining from first dataset point.
      */
     @Suppress("UNUSED")
-    @PublicApi
     fun setBaselineManually(baseline: Float): LiveChartView {
         manualBaseline = true
         this.baseline = baseline
@@ -259,13 +253,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Path generated from dataset points.
      */
-    private var datasetPath = Path().apply {
-        moveTo(chartBounds.start, baseline)
-        dataset.points.forEach { point ->
-            lineTo(point.x,
-                baseline.yPointToPixels())
-        }
-    }
+    private var datasetPath = Path()
 
     /**
      * Line [Paint] for this chart.
@@ -281,13 +269,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Path generated from dataset points.
      */
-    private var secondDatasetPath = Path().apply {
-        moveTo(chartBounds.start, baseline)
-        dataset.points.forEach { point ->
-            lineTo(point.x,
-                baseline.yPointToPixels())
-        }
-    }
+    private var secondDatasetPath = Path()
 
     /**
      * Line [Paint] for this chart.
@@ -303,13 +285,7 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
     /**
      * Path generated from dataset points.
      */
-    private var datasetFillPath = Path().apply {
-        moveTo(chartBounds.start, baseline)
-        dataset.points.forEach { point ->
-            lineTo(point.x,
-                point.y)
-        }
-    }
+    private var datasetFillPath = Path()
 
     /**
      * Line [Paint] for this chart.
@@ -388,27 +364,14 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
      * Find the bounds data point to screen pixels ratio for the Y Axis.
      */
     private fun yBoundsToPixels(): Float {
-        return if (secondDataset.hasData()) {
-            (max(dataset.upperBound(),
-                secondDataset.upperBound()) -
-                    min(dataset.lowerBound(),
-                        secondDataset.lowerBound())) / chartBounds.bottom
-        } else {
-            (dataset.upperBound() - dataset.lowerBound()) / chartBounds.bottom
-        }
+        return (upperBound - lowerBound) / chartBounds.bottom
     }
 
     /**
      * Transform a Y Axis data point to screen pixels within bounds.
      */
     private fun Float.yPointToPixels(): Float {
-        return if (secondDataset.hasData()) {
-            chartBounds.bottom -
-                    ((this - min(dataset.lowerBound(), secondDataset.lowerBound())) /
-                            yBoundsToPixels())
-        } else {
-            chartBounds.bottom - ((this - dataset.lowerBound()) / yBoundsToPixels())
-        }
+        return chartBounds.bottom - ((this - lowerBound) / yBoundsToPixels())
     }
 
     /**
@@ -453,6 +416,20 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
 
             if (!manualBaseline) {
                 baseline = dataset.points.first().y
+            }
+
+            // Assign the lower bound of this chart,
+            lowerBound = if (secondDataset.hasData()) {
+               min(dataset.lowerBound(), secondDataset.lowerBound())
+            } else {
+                dataset.lowerBound()
+            }
+
+            // Assign the upper bound of this chart,
+            upperBound = if (secondDataset.hasData()) {
+                max(dataset.upperBound(), secondDataset.upperBound())
+            } else {
+                dataset.upperBound()
             }
 
             datasetPath = Path().apply {
@@ -570,34 +547,34 @@ class LiveChartView(context: Context?, attrs: AttributeSet?) : View(context, att
                 yBoundLinePaint)
 
             // LOWER BOUND
-            canvas.drawText("%.2f".format(dataset.lowerBound()),
+            canvas.drawText("%.2f".format(lowerBound),
                 chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.bottom,
                 boundsTextPaint)
 
             // FIRST QUARTER BOUND
             canvas.drawText(
-                "%.2f".format(dataset.upperBound()-(dataset.upperBound() - dataset.lowerBound())/4),
+                "%.2f".format(upperBound-(upperBound - lowerBound)/4f),
                 chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.top + chartBounds.bottom/4f,
                 boundsTextPaint)
 
             // MIDDLE BOUND
             canvas.drawText(
-                "%.2f".format(dataset.upperBound()-(dataset.upperBound() - dataset.lowerBound())/2),
+                "%.2f".format(upperBound-(upperBound - lowerBound)/2f),
                 chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.top + chartBounds.bottom/2f,
                 boundsTextPaint)
 
             // THIRD QUARTER BOUND
             canvas.drawText(
-                "%.2f".format(dataset.upperBound()-(dataset.upperBound() - dataset.lowerBound())*0.75f),
+                "%.2f".format(upperBound-(upperBound - lowerBound)*0.75f),
                 chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.top + chartBounds.bottom*0.75f,
                 boundsTextPaint)
 
             // UPPER BOUND
-            canvas.drawText("%.2f".format(dataset.upperBound()),
+            canvas.drawText("%.2f".format(upperBound),
                 chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                 chartBounds.top,
                 boundsTextPaint)

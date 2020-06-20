@@ -15,5 +15,5 @@
         android:id="@+id/touch_overlay_point"
         android:layout_width="8dp"
         android:layout_height="8dp"
-        android:background="@drawable/circle"/>
+        android:background="@drawable/livechart_circle"/>
 </FrameLayout>

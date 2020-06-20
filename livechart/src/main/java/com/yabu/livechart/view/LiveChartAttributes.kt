@@ -32,4 +32,10 @@ internal object LiveChartAttributes {
     const val TAG_PADDING = 8f
 
     const val TEXT_HEIGHT = 30f
+
+    const val OVERLAY_LINE_COLOR = Color.GRAY
+
+    const val OVERLAY_CIRCLE_COLOR = Color.BLACK
+
+    const val OVERLAY_CIRCLE_DIAMETER = 24f
 }

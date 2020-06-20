@@ -11,5 +11,8 @@
         <attr name="baselineStrokeWidth" format="dimension"/>
         <attr name="baselineDashGap" format="dimension"/>
         <attr name="labelTextHeight" format="dimension"/>
+        <attr name="overlayLineColor" format="reference|color"/>
+        <attr name="overlayCircleColor" format="reference|color"/>
+        <attr name="overlayCircleDiameter" format="dimension"/>
     </declare-styleable>
 </resources>
