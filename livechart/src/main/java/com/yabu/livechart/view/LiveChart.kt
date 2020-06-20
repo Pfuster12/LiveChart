@@ -2,7 +2,9 @@ package com.yabu.livechart.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
+import com.yabu.livechart.model.DataPoint
 import com.yabu.livechart.model.Dataset
 import com.yabu.livechart.utils.PublicApi
 
@@ -23,6 +25,10 @@ import com.yabu.livechart.utils.PublicApi
  */
 class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
 
+    interface OnTouchCallback {
+        fun onTouchCallback(point: DataPoint)
+    }
+
     /**
      * [LiveChartView] reference.
      * Pass the attributes to the chart.
@@ -40,6 +46,11 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT,
             LayoutParams.MATCH_PARENT)
     }
+
+    /**
+     * Flag to disable touch overlay.
+     */
+    private var disableTouchOverlay: Boolean = false
 
     init {
         clipToOutline = false
@@ -143,12 +154,35 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
         return this
     }
 
+    @Suppress("UNUSED")
+    @PublicApi
+    fun setOnTouchCallbackListener(listener: OnTouchCallback): LiveChart {
+        overlay.setOnTouchCallbackListener(listener)
+
+        return this
+    }
+
+    /**
+     * Disable the touch overlay component.
+     * This is useful for small charts that do not benefit from showing the touch event
+     * or as an optimization if you require less overhead on your View.
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun disableTouchOverlay(): LiveChart {
+        overlay.visibility = View.GONE
+        disableTouchOverlay = true
+        return this
+    }
+
     /**
      * Draw on chart and bind overlay to dataset.
      */
     @PublicApi
     fun drawDataset() {
         livechart.drawDataset()
-        overlay.bindToDataset()
+        if (!disableTouchOverlay) {
+            overlay.bindToDataset()
+        }
     }
 }

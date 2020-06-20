@@ -38,6 +38,14 @@
         android:layout_marginBottom="16dp"/>
 
     <TextView
+        android:id="@+id/main_simple_data_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="40.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/main_simple"/>
+
+    <TextView
         android:id="@+id/main_positive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

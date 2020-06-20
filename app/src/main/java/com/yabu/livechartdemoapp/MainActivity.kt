@@ -13,6 +13,7 @@ import com.yabu.livechart.view.LiveChart
 import com.yabu.livechart.view.LiveChartStyle
 import com.yabu.livechart.view.LiveChartTouchOverlay
 import com.yabu.livechart.view.LiveChartView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var livechart: LiveChart
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             pathStrokeWidth = 8f
             secondPathStrokeWidth = 4f
             textHeight = 40f
+            overlayLineColor = Color.BLUE
             overlayCircleDiameter = 32f
             overlayCircleColor = Color.GREEN
         }
@@ -51,8 +53,12 @@ class MainActivity : AppCompatActivity() {
         ))
 
         livechartSimple.setDataset(dataset)
-            .setSecondDataset(secondDataset)
             .setLiveChartStyle(chartStyle)
+            .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
+                override fun onTouchCallback(point: DataPoint) {
+                    main_simple_data_point.text = "(${"%.2f".format(point.x)}, ${"%.2f".format(point.y)})"
+                }
+            })
             .drawDataset()
 
         val firstDataset = Dataset(mutableListOf(DataPoint(0f, 1f),

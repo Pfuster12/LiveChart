@@ -16,7 +16,7 @@ import kotlin.math.min
 /**
  * Base [View] subclass handling the drawing of dataset paths and chart bounds.
  */
-class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
+open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
     /**
      * The chart bounds in the screen pixel space
@@ -136,6 +136,7 @@ class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attr
     /**
      * Set the [dataset] of this chart.
      */
+    @PublicApi
     fun setDataset(dataset: Dataset): LiveChartView {
         this.dataset = dataset
         return this
@@ -144,6 +145,7 @@ class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attr
     /**
      * Set the Second [dataset] of this chart.
      */
+    @PublicApi
     fun setSecondDataset(dataset: Dataset): LiveChartView {
         this.secondDataset = dataset
         return this
@@ -152,6 +154,7 @@ class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attr
     /**
      * Set the style object [LiveChartStyle] to this chart.
      */
+    @PublicApi
     fun setLiveChartStyle(style: LiveChartStyle): LiveChartView {
         chartStyle = style
 
@@ -181,6 +184,7 @@ class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attr
      * Draw baseline flag.
      */
     @Suppress("UNUSED")
+    @PublicApi
     fun drawBaselineConditionalColor(): LiveChartView {
         drawBaselineConditionalColor = true
 
@@ -190,6 +194,7 @@ class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attr
     /**
      * Draw baseline flag.
      */
+    @PublicApi
     fun drawBaseline(): LiveChartView {
         drawBaseline = true
 
@@ -199,6 +204,7 @@ class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attr
     /**
      * Draw Fill flag.
      */
+    @PublicApi
     fun drawFill(withGradient: Boolean = true): LiveChartView {
         drawFill = true
         drawGradientFill = withGradient
@@ -208,6 +214,7 @@ class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attr
     /**
      * Draw Y bounds flag.
      */
+    @PublicApi
     fun drawYBounds(): LiveChartView {
         drawYBounds = true
 
@@ -218,6 +225,7 @@ class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attr
      * Draw last point label flag.
      */
     @Suppress("UNUSED")
+    @PublicApi
     fun drawLastPointLabel(): LiveChartView {
         drawLastPointLabel = true
 
@@ -228,6 +236,7 @@ class LiveChartView(context: Context, attrs: AttributeSet?) : View(context, attr
      * Set [baseline] data point manually instead of determining from first dataset point.
      */
     @Suppress("UNUSED")
+    @PublicApi
     fun setBaselineManually(baseline: Float): LiveChartView {
         manualBaseline = true
         this.baseline = baseline

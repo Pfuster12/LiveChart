@@ -42,7 +42,7 @@ The LiveChart library has just started out. Have a look at the roadmap for new f
 
 ## How to Use
 
-You'll need a reference to a `LiveChartView` first, either through XML or programmatically:
+You'll need a reference to a `LiveChart` view first, either through XML or programmatically:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -173,7 +173,7 @@ reference too.
 You can also style a number of attributes through the XML layout attributes. For example:
 
 ```xml
-    <com.yabu.livechart.view.LiveChartView
+    <com.yabu.livechart.view.LiveChart
         android:id="@+id/live_chart"
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -183,7 +183,10 @@ You can also style a number of attributes through the XML layout attributes. For
         app:baselineStrokeWidth="4dp"
         app:baselineDashGap="8dp"
         app:labelTextHeight="14sp"
-        app:baselineColor="@color/colorPrimaryDark"/>
+        app:baselineColor="@color/colorPrimaryDark"
+        app:overlayCircleColor="@color/colorPrimaryDark"
+        app:overlayLineColor="@color/colorPrimary"
+        app:overlayCircleDiameter="8dp"/>
 ```
 
 For a full set of available attributes you can check the `LiveChartView` reference.
@@ -230,10 +233,63 @@ livechart.setDataset(firstDataset)
 
 This results in the following chart:
 
-<img src="/.sample-images/livechart_second_dataset_example_1.PNG" height="120"/>
+<img src="/.sample-images/livechart_second_dataset_example_1.PNG" height="160"/>
 
 > **NOTE** Want more than two datasets? Don't worry, the project roadmap intends to support drawing 
 > an unlimited number of datasets provided in a list. 
+
+## Touch Events
+ 
+Since v1.2.0 LiveChart supports touch events and can draw a visual DataPoint slider that moves with your finger.
+
+<img src="/.sample-images/livechart_slider.gif" height="160"/>
+
+The touch overlay is built in to the `LiveChart` class. You can style the vertical slider and
+circle through the `LiveChartStyle` object or through the XML attributes (See above):
+
+```kotlin
+val chartStyle = LiveChartStyle().apply {
+    overlayLineColor = Color.BLUE
+    overlayCircleDiameter = 32f
+    overlayCircleColor = Color.GREEN
+}
+
+livechart.setDataset(dataset)
+    .setLiveChartStyle(chartStyle)
+    .drawDataset()
+```
+
+Just drawing the horizontal slider doesn't tell us much though. We can add a listener to get the current
+`DataPoint` of the touch event with the `LiveChart.OnTouchCallback`:
+
+```kotlin
+val textView = findViewById(R.id.text_view)
+
+livechart.setDataset(dataset)
+        .setLiveChartStyle(chartStyle)
+        .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
+            override fun onTouchCallback(point: DataPoint) {
+                textView.text = "(${"%.2f".format(point.x)}, ${"%.2f".format(point.y)})"
+            }
+        })
+        .drawDataset()
+```
+
+This allows us to show the current point the user is dragging along.
+
+### Disabling the touch overlay
+
+If you don't want the touch overlay it can be disabled easily:
+
+```kotlin
+livechart.setDataset(dataset)
+        .disableTouchOverlay()
+        .drawDataset()
+```
+
+You might want to do this when the chart view is too small to benefit from touch interactions,
+or if you require extra optimization in your view drawing and would require as little overhead as
+possible.
 
 ## Things to consider
 
@@ -246,3 +302,15 @@ are not careful with the amount of data you feed in.
 
 A good Android citizen will only draw the necessary data points, avoid calling `drawDataset()` repeatedly
 and not animate the `LiveChartView` excessively.
+
+### Using LiveChartView only
+
+Even though the main entry point to this library is the `LiveChart` layout class which contains extra
+touch functionality, the base `View` class `LiveChartView` that actually performs the drawing is kept 
+public in case there is performance requirements and you don't need want the touch overlay views 
+overhead (You can also disable it, see above).
+
+It also allows to override it and add custom functionality to this base class, as LiveChart is kept final.
+
+The View has the exact same public API and xml attributes as the `LiveChart` class so they are almost
+interchangeable.

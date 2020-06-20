@@ -13,8 +13,10 @@ import android.view.View
 import android.widget.FrameLayout
 import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
+import com.yabu.livechart.model.DataPoint
 import com.yabu.livechart.model.Dataset
 import com.yabu.livechart.utils.PublicApi
+import com.yabu.livechart.view.LiveChart.OnTouchCallback
 import kotlin.math.max
 import kotlin.math.min
 
@@ -70,6 +72,11 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
      */
     private var drawYBounds = false
 
+    /**
+     * [OnTouchCallback] listener.
+     */
+    private var touchListener: OnTouchCallback? = null
+
     init {
         clipChildren = false
 
@@ -104,7 +111,6 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     /**
      * Draw Y bounds flag.
      */
-    @PublicApi
     fun drawYBounds(): LiveChartTouchOverlay {
         drawYBounds = true
 
@@ -115,7 +121,6 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
      * Set the [Dataset] this overlay responds to.
      * @param dataset
      */
-    @PublicApi
     fun setDataset(dataset: Dataset): LiveChartTouchOverlay {
         this.dataset = dataset
 
@@ -133,7 +138,6 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     /**
      * Set the style object [LiveChartStyle] to this overlay.
      */
-    @PublicApi
     fun setLiveChartStyle(style: LiveChartStyle): LiveChartTouchOverlay {
         chartStyle = style
 
@@ -144,6 +148,13 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
 
         overlayLine.setBackgroundColor(chartStyle.overlayLineColor)
         overlayPoint.backgroundTintList = ColorStateList.valueOf(chartStyle.overlayCircleColor)
+
+        return this
+    }
+
+    @Suppress("UNUSED")
+    fun setOnTouchCallbackListener(listener: OnTouchCallback): LiveChartTouchOverlay {
+        this.touchListener = listener
 
         return this
     }
@@ -202,6 +213,18 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     }
 
     /**
+     * Transform a Y Axis screen pixels to a point within bounds.
+     */
+    private fun Float.yPixelsToPoint(): Float {
+        return if (secondDataset.hasData()) {
+            ((this - chartBounds.bottom) * -yBoundsToPixels()) +
+                    min(dataset.lowerBound(), secondDataset.lowerBound())
+        } else {
+            ((this - chartBounds.bottom) * -yBoundsToPixels()) + dataset.lowerBound()
+        }
+    }
+
+    /**
      * Find the bounds data point to screen pixels ratio for the X Axis.
      */
     private fun xBoundsToPixels(): Float {
@@ -239,6 +262,12 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
 
                 overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
                 overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+
+                touchListener?.onTouchCallback(DataPoint(
+                    x = coordinates[0],
+                    y = coordinates[1].yPixelsToPoint()
+                ))
+
                 true
             }
 
@@ -254,6 +283,12 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
 
                 overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
                 overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+
+                touchListener?.onTouchCallback(DataPoint(
+                    x = coordinates[0],
+                    y = coordinates[1].yPixelsToPoint()
+                ))
+
                 true
             }
 
