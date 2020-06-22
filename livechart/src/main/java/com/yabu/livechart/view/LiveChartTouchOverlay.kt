@@ -238,6 +238,10 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
         }
     }
 
+    private fun Float.xPixelsToPoint(): Float {
+        return this*xBoundsToPixels()
+    }
+
     /**
      * Transform a X Axis data point to screen pixels.
      */
@@ -264,7 +268,7 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
                 overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
 
                 touchListener?.onTouchCallback(DataPoint(
-                    x = coordinates[0],
+                    x = coordinates[0].xPixelsToPoint(),
                     y = coordinates[1].yPixelsToPoint()
                 ))
 
@@ -285,7 +289,7 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
                 overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
 
                 touchListener?.onTouchCallback(DataPoint(
-                    x = coordinates[0],
+                    x = coordinates[0].xPixelsToPoint(),
                     y = coordinates[1].yPixelsToPoint()
                 ))
 
