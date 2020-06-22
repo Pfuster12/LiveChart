@@ -53,7 +53,7 @@ You'll need a reference to a `LiveChart` view first, either through XML or progr
     android:clipChildren="false"
     tools:context=".MainActivity">
 
-    <com.yabu.livechart.view.LiveChartView
+    <com.yabu.livechart.view.LiveChart
         android:id="@+id/live_chart"
         android:layout_width="match_parent"
         android:layout_height="300dp"/>
