@@ -52,7 +52,13 @@ class MainActivity : AppCompatActivity() {
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")
                 override fun onTouchCallback(point: DataPoint) {
+                    livechartSimple.parent.requestDisallowInterceptTouchEvent(true)
                     main_simple_data_point.text = "(${"%.2f".format(point.x)}, ${"%.2f".format(point.y)})"
+                }
+
+                override fun onTouchFinished() {
+                    livechartSimple.parent.requestDisallowInterceptTouchEvent(false)
+                    main_simple_data_point.text = "Touch Finished"
                 }
             })
             .drawDataset()
