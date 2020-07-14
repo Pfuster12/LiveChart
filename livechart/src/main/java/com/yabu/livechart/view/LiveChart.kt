@@ -27,6 +27,8 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
 
     interface OnTouchCallback {
         fun onTouchCallback(point: DataPoint)
+
+        fun onTouchFinished()
     }
 
     /**
