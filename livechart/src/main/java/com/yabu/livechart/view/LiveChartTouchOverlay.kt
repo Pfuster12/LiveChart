@@ -299,6 +299,8 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
             MotionEvent.ACTION_UP,
             MotionEvent.ACTION_CANCEL,
             MotionEvent.ACTION_OUTSIDE -> {
+                touchListener?.onTouchFinished()
+
                 overlay.alpha = 0f
                 true
             }
