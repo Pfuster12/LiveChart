@@ -213,6 +213,17 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     }
 
     /**
+     * Disable Fill flag.
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun disableFill(): LiveChartView {
+        drawFill = false
+        drawGradientFill = false
+        return this
+    }
+
+    /**
      * Draw Y bounds flag.
      */
     @PublicApi
@@ -241,6 +252,18 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     fun setBaselineManually(baseline: Float): LiveChartView {
         manualBaseline = true
         this.baseline = baseline
+
+        return this
+    }
+
+    /**
+     * Draw [baseline] automatically from first point.
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun drawBaselineFromFirstPoint(): LiveChartView {
+        manualBaseline = false
+        drawBaseline = true
 
         return this
     }
