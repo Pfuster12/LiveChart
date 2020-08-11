@@ -116,7 +116,7 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
     }
 
     /**
-     * Draw [baseline] automatically from first point.
+     * Draw baseline automatically from first point.
      */
     @Suppress("UNUSED")
     @PublicApi
