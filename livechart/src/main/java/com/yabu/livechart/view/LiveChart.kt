@@ -116,11 +116,32 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
     }
 
     /**
+     * Draw [baseline] automatically from first point.
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun drawBaselineFromFirstPoint(): LiveChart {
+        livechart.drawBaselineFromFirstPoint()
+
+        return this
+    }
+
+    /**
      * Draw Fill flag.
      */
     @PublicApi
     fun drawFill(withGradient: Boolean = true): LiveChart {
         livechart.drawFill(withGradient)
+        return this
+    }
+
+    /**
+     * Disable Fill flag.
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun disableFill(): LiveChart {
+        livechart.disableFill()
         return this
     }
 
