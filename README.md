@@ -327,6 +327,200 @@ are not careful with the amount of data you feed in.
 A good Android citizen will only draw the necessary data points, avoid calling `drawDataset()` repeatedly
 and not animate the `LiveChartView` excessively.
 
+## API Reference
+
+Dokka Generated Kdocs:
+
+- [LiveChart](https://pfuster12.github.io/LiveChart/livechart/com.yabu.livechart.view/-live-chart/index.html)
+- [LiveChartStyle](https://pfuster12.github.io/LiveChart/livechart/com.yabu.livechart.view/-live-chart-style/index.html)
+
+Public Methods for LiveChart:
+
+```kotlin
+
+    /**
+     * Set the [dataset] of this chart.
+     */
+    fun setDataset(dataset: Dataset): LiveChart
+
+    /**
+     * Set the Second [dataset] of this chart.
+     */
+    fun setSecondDataset(dataset: Dataset): LiveChart
+    /**
+     * Set the style object [LiveChartStyle] to this chart.
+     */
+    fun setLiveChartStyle(style: LiveChartStyle): LiveChart
+
+    /**
+     * Draw baseline flag.
+     */
+    fun drawBaselineConditionalColor(): LiveChart
+    
+    /**
+     * Draw baseline flag.
+     */
+    fun drawBaseline(): LiveChart
+
+    /**
+     * Draw baseline automatically from first point.
+     */
+    fun drawBaselineFromFirstPoint(): LiveChart
+
+    /**
+     * Draw Fill flag.
+     */
+    fun drawFill(withGradient: Boolean = true): LiveChart
+
+    /**
+     * Disable Fill flag.
+     */
+    fun disableFill(): LiveChart
+
+    /**
+     * Draw Y bounds flag.
+     */
+    fun drawYBounds(): LiveChart
+
+    /**
+     * Draw last point label flag.
+     */
+    fun drawLastPointLabel(): LiveChart
+
+    /**
+     * Set [baseline] data point manually instead of determining from first dataset point.
+     */
+    fun setBaselineManually(baseline: Float): LiveChart
+    
+    /**
+     * Set the OnTouchCallback interface.
+     */
+    fun setOnTouchCallbackListener(listener: OnTouchCallback): LiveChart
+
+    /**
+     * Disable the touch overlay component.
+     * This is useful for small charts that do not benefit from showing the touch event
+     * or as an optimization if you require less overhead on your View.
+     */
+    fun disableTouchOverlay(): LiveChart
+
+    /**
+     * Draw on chart and bind overlay to dataset.
+     */
+    fun drawDataset()
+```
+
+LiveChartStyle properties:
+
+```kotlin
+
+/**
+ * Class containing style properties to format a LiveChart.
+ */
+class LiveChartStyle {
+
+    /**
+     * Label text color.
+     */
+    var textColor: Int = LiveChartAttributes.TEXT_COLOR
+
+    /**
+     * Main color
+     */
+    var mainColor: Int = LiveChartAttributes.MAIN_COLOR
+
+    /**
+     * Main color
+     */
+    var secondColor: Int = Color.GRAY
+
+    /**
+     * Positive from baseline fill color.
+     */
+    var mainFillColor: Int = Color.parseColor(LiveChartAttributes.FILL_COLOR)
+
+    /**
+     * Positive from baseline color.
+     */
+    var positiveColor: Int = Color.parseColor(LiveChartAttributes.POSITIVE_COLOR)
+
+    /**
+     * Negative from baseline color.
+     */
+    var negativeColor: Int =  Color.parseColor(LiveChartAttributes.NEGATIVE_COLOR)
+
+    /**
+     * Positive from baseline fill color.
+     */
+    var positiveFillColor: Int =  Color.parseColor(LiveChartAttributes.POSITIVE_FILL_COLOR)
+
+    /**
+     * Negative from baseline fill color.
+     */
+    var negativeFillColor: Int = Color.parseColor(LiveChartAttributes.NEGATIVE_FILL_COLOR)
+
+    /**
+     * Baseline color.
+     */
+    var baselineColor: Int = Color.GRAY
+
+    /**
+     * Baseline color.
+     */
+    var boundsLineColor: Int = Color.GRAY
+
+    /**
+     * Path stroke width
+     */
+    var pathStrokeWidth = LiveChartAttributes.STROKE_WIDTH
+
+    /**
+     * Second dataset Path stroke width
+     */
+    var secondPathStrokeWidth = LiveChartAttributes.STROKE_WIDTH
+
+    /**
+     * Baseline stroke width
+     */
+    var baselineStrokeWidth = LiveChartAttributes.BASELINE_STROKE_WIDTH
+
+    /**
+     * Baseline dash line width
+     */
+    var baselineDashLineWidth = LiveChartAttributes.DASH_LINE_STROKE
+
+    /**
+     * Baseline dash line gap width
+     */
+    var baselineDashLineGap = LiveChartAttributes.DASH_LINE_GAP
+
+    /**
+     * Baseline dash line gap width
+     */
+    var chartEndPadding = LiveChartAttributes.CHART_END_PADDING
+
+    /**
+     * Chart text height
+     */
+    var textHeight = LiveChartAttributes.TEXT_HEIGHT
+
+    /**
+     * Overlay vertical line color.
+     */
+    var overlayLineColor = LiveChartAttributes.OVERLAY_LINE_COLOR
+
+    /**
+     * Overlay livechart_circle color.
+     */
+    var overlayCircleColor = LiveChartAttributes.OVERLAY_CIRCLE_COLOR
+
+    /**
+     * Overlay livechart_circle diameter.
+     */
+    var overlayCircleDiameter = LiveChartAttributes.OVERLAY_CIRCLE_DIAMETER
+}
+```
+
 ### Using LiveChartView only
 
 Even though the main entry point to this library is the `LiveChart` layout class which contains extra
