@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'org.jetbrains.dokka'
 
 group='com.github.Pfuster12'
 
@@ -23,6 +24,22 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dokkaHtml {
+    dokkaSourceSets {
+        outputDirectory = "$rootDir/docs"
+        create("main") {
+            noAndroidSdkLink = true
+            perPackageOption {
+                skipEmptyPackages = true
+                // Use to include or exclude non public members
+                includeNonPublic = false
+                prefix = " android.view.View" // will match android and all sub-packages of it
+                suppress = true
+            }
         }
     }
 }

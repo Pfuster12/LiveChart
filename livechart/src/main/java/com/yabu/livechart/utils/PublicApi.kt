@@ -5,4 +5,5 @@ package com.yabu.livechart.utils
  * to interact with the live chart.
  */
 @Target(AnnotationTarget.FUNCTION)
+@MustBeDocumented
 internal annotation class PublicApi

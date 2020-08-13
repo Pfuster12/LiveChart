@@ -9,8 +9,7 @@ import com.yabu.livechart.model.Dataset
 import com.yabu.livechart.utils.PublicApi
 
 /**
- * A Live Chart displays a 2 Dimensional [Dataset], with an optional live
- * subscription to push new data points to the end of the data set.
+ * A Live Chart displays a 2 Dimensional [Dataset].
  *
  * The chart can have a baseline onto which the end point data set is compared to determine whether
  * it has positive or negative change, and highlights the data set accordingly with color.
