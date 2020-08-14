@@ -135,6 +135,21 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
     }
 
     /**
+     * Draw smooth path flag.
+     */
+    @PublicApi
+    fun drawSmoothPath(): LiveChart {
+        livechart.drawSmoothPath()
+        return this
+    }
+
+    @PublicApi
+    fun drawStraightPath(): LiveChart {
+        livechart.drawStraightPath()
+        return this
+    }
+
+    /**
      * Disable Fill flag.
      */
     @Suppress("UNUSED")

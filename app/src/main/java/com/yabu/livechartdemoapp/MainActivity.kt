@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         livechartSimple.setDataset(dataset)
             .setLiveChartStyle(chartStyle)
+            .drawSmoothPath()
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")
                 override fun onTouchCallback(point: DataPoint) {
@@ -82,9 +83,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         livechart.setDataset(firstDataset)
-            .setSecondDataset(secondDataset)
             .setLiveChartStyle(style)
             .disableTouchOverlay()
+            .drawSmoothPath()
             .drawYBounds()
             .drawDataset()
 

@@ -7,6 +7,8 @@ import android.view.View
 import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
 import com.yabu.livechart.model.Dataset
+import com.yabu.livechart.utils.EPointF
+import com.yabu.livechart.utils.PolyBezierPathUtil
 import com.yabu.livechart.utils.PublicApi
 import com.yabu.livechart.view.LiveChartAttributes.TAG_PADDING
 import com.yabu.livechart.view.LiveChartAttributes.TAG_WIDTH
@@ -67,6 +69,11 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
      * Baseline display flag.
      */
     private var drawBaseline = false
+
+    /**
+     * Smooth Path flag
+     */
+    private var drawSmoothPath = false
 
     /**
      * Fill display flag.
@@ -198,6 +205,26 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     @PublicApi
     fun drawBaseline(): LiveChartView {
         drawBaseline = true
+
+        return this
+    }
+
+    /**
+     * Draw smooth path flag.
+     */
+    @PublicApi
+    fun drawSmoothPath(): LiveChartView {
+        drawSmoothPath = true
+
+        return this
+    }
+
+    /**
+     * Draw straight path flag.
+     */
+    @PublicApi
+    fun drawStraightPath(): LiveChartView {
+        drawSmoothPath = false
 
         return this
     }
@@ -465,31 +492,49 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                 dataset.upperBound()
             }
 
-            datasetPath = Path().apply {
-                dataset.points.forEachIndexed { index, point ->
-                    // move path to first data point,
-                    if (index == 0) {
-                        moveTo(chartBounds.start + point.x.xPointToPixels(),
-                            point.y.yPointToPixels())
-                        return@forEachIndexed
-                    }
-
-                    lineTo(chartBounds.start + point.x.xPointToPixels(),
-                        point.y.yPointToPixels())
+            if (drawSmoothPath) {
+                if (dataset.points.size > 1) {
+                    datasetPath = PolyBezierPathUtil
+                        .computePathThroughDataPoints(
+                            dataset.points.map {
+                                EPointF(it.x.xPointToPixels(), it.y.yPointToPixels())
+                            })
                 }
-            }
 
-            secondDatasetPath = Path().apply {
-                secondDataset.points.forEachIndexed { index, point ->
-                    // move path to first data point,
-                    if (index == 0) {
-                        moveTo(chartBounds.start + point.x.xPointToPixels(),
+                if (secondDataset.points.size > 1) {
+                    secondDatasetPath = PolyBezierPathUtil
+                        .computePathThroughDataPoints(
+                            secondDataset.points.map {
+                                EPointF(it.x.xPointToPixels(), it.y.yPointToPixels())
+                            })
+                }
+            } else {
+                datasetPath = Path().apply {
+                    dataset.points.forEachIndexed { index, point ->
+                        // move path to first data point,
+                        if (index == 0) {
+                            moveTo(chartBounds.start + point.x.xPointToPixels(),
+                                point.y.yPointToPixels())
+                            return@forEachIndexed
+                        }
+
+                        lineTo(chartBounds.start + point.x.xPointToPixels(),
                             point.y.yPointToPixels())
-                        return@forEachIndexed
                     }
+                }
 
-                    lineTo(chartBounds.start + point.x.xPointToPixels(),
-                        point.y.yPointToPixels())
+                secondDatasetPath = Path().apply {
+                    secondDataset.points.forEachIndexed { index, point ->
+                        // move path to first data point,
+                        if (index == 0) {
+                            moveTo(chartBounds.start + point.x.xPointToPixels(),
+                                point.y.yPointToPixels())
+                            return@forEachIndexed
+                        }
+
+                        lineTo(chartBounds.start + point.x.xPointToPixels(),
+                            point.y.yPointToPixels())
+                    }
                 }
             }
 

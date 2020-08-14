@@ -1,6 +1,7 @@
 package com.yabu.livechart.view
 
 import android.graphics.Color
+import android.util.TypedValue
 
 internal object LiveChartAttributes {
     const val STROKE_WIDTH = 4f
