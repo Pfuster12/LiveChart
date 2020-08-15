@@ -661,6 +661,39 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
             return
         }
 
+        if (drawVerticalGuidelines) {
+            for (i in 0..verticalGuidelineStep) {
+                // draw vertical guidelines
+                canvas.drawLine((if (drawYBounds)
+                    (chartBounds.end - chartStyle.chartEndPadding)/verticalGuidelineStep
+                else
+                    chartBounds.end/verticalGuidelineStep)*i,
+                    chartBounds.bottom,
+                    (if (drawYBounds)
+                        (chartBounds.end - chartStyle.chartEndPadding)/verticalGuidelineStep
+                    else
+                        chartBounds.end/verticalGuidelineStep)*i,
+                    chartBounds.top,
+                    guideLinePaint
+                )
+            }
+        }
+
+        if (drawHorizontalGuidelines) {
+            for (i in 0..horizontalGuidelineStep) {
+                // draw vertical guidelines
+                canvas.drawLine(chartBounds.start,
+                    (chartBounds.bottom/horizontalGuidelineStep)*i,
+                    if (drawYBounds)
+                        (chartBounds.end - chartStyle.chartEndPadding)
+                    else
+                        chartBounds.end,
+                    (chartBounds.bottom/horizontalGuidelineStep)*i,
+                    guideLinePaint
+                )
+            }
+        }
+
         if (drawBaseline) {
             // draw baseline
             canvas.drawLine(chartBounds.start,
@@ -748,39 +781,6 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                     dataset.points.last().y.yPointToPixels() - TAG_PADDING,
                     endPointTagTextPaint)
-            }
-        }
-
-        if (drawVerticalGuidelines) {
-            for (i in 0..verticalGuidelineStep) {
-                // draw vertical guidelines
-                canvas.drawLine((if (drawYBounds)
-                    (chartBounds.end - chartStyle.chartEndPadding)/verticalGuidelineStep
-                else
-                    chartBounds.end/verticalGuidelineStep)*i,
-                    chartBounds.bottom,
-                    (if (drawYBounds)
-                        (chartBounds.end - chartStyle.chartEndPadding)/verticalGuidelineStep
-                    else
-                        chartBounds.end/verticalGuidelineStep)*i,
-                    chartBounds.top,
-                    guideLinePaint
-                )
-            }
-        }
-
-        if (drawHorizontalGuidelines) {
-            for (i in 0..horizontalGuidelineStep) {
-                // draw vertical guidelines
-                canvas.drawLine(chartBounds.start,
-                    (chartBounds.bottom/horizontalGuidelineStep)*i,
-                    if (drawYBounds)
-                        (chartBounds.end - chartStyle.chartEndPadding)
-                    else
-                        chartBounds.end,
-                    (chartBounds.bottom/horizontalGuidelineStep)*i,
-                    guideLinePaint
-                )
             }
         }
     }
