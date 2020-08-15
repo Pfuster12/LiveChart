@@ -291,6 +291,52 @@ You might want to do this when the chart view is too small to benefit from touch
 or if you require extra optimization in your view drawing and would require as little overhead as
 possible.
 
+## Smooth Path
+
+Since `1.3.0` LiveChart supports drawing a rounded path instead of straight corners.
+
+There are two options to enable this feature:
+
+1. Toggle an optimized rounded smooth path with `drawSmoothPath`. 
+
+**NOTE** There is a calculation overhead to toggling it this way.
+**NOTE** This is the only way for Touch overlay to work correctly.
+
+```kotlin
+livechart.setDataset(dataset)
+        .drawSmoothPath()
+        .drawDataset()
+```
+
+
+2. Use the built in Android CornerPathEffect by setting the corner radius in the `LiveChartStyle` properties:
+
+**NOTE** Touch overlay doesn't work correctly here because the Android generated path is not available. 
+
+```kotlin
+val chartStyle = LiveChartStyle().apply {
+    mainCornerRadius = 40f
+}
+
+livechart.setDataset(dataset)
+    .setLiveChartStyle(chartStyle)
+    .drawDataset()
+```
+
+## Guidelines
+
+Since `1.3.0` the chart supports drawing vertical and/or horizontal chart guidelines at *n* number of steps:
+
+Simply toggle them and pass the desired number of steps. You can also color them through the `LiveChartStyle.guideLineColor` property:
+
+
+```kotlin
+livechart.setDataset(dataset)
+    .drawVerticalGuidelines(steps=4)
+    .drawHorizontalGuidelines(steps=4)
+    .drawDataset()
+```
+
 ## Known Issues with Touch Overlay
 
 If you place the LiveChart in a scrollview the touch event gets consumed early.
@@ -373,6 +419,16 @@ Public Methods for LiveChart:
      * Draw Fill flag.
      */
     fun drawFill(withGradient: Boolean = true): LiveChart
+    
+     /**
+     * Draw smooth path flag.
+     */
+    fun drawSmoothPath(): LiveChart
+
+     /**
+     * Draw straight path flag.
+     */
+    fun drawStraightPath(): LiveChart
 
     /**
      * Disable Fill flag.
@@ -388,6 +444,18 @@ Public Methods for LiveChart:
      * Draw last point label flag.
      */
     fun drawLastPointLabel(): LiveChart
+    
+    /**
+     * Draw vertical guidelines
+     * @param steps Number of guidelines
+     */
+    fun drawVerticalGuidelines(steps: Int): LiveChart
+
+    /**
+     * Draw horizontal guidelines
+     * @param steps Number of guidelines
+     */
+    fun drawHorizontalGuidelines(steps: Int): LiveChart
 
     /**
      * Set [baseline] data point manually instead of determining from first dataset point.
@@ -434,7 +502,7 @@ class LiveChartStyle {
     /**
      * Main color
      */
-    var secondColor: Int = Color.GRAY
+    var secondColor: Int = LiveChartAttributes.SECOND_COLOR
 
     /**
      * Positive from baseline fill color.
@@ -462,14 +530,29 @@ class LiveChartStyle {
     var negativeFillColor: Int = Color.parseColor(LiveChartAttributes.NEGATIVE_FILL_COLOR)
 
     /**
-     * Baseline color.
+     * Main Path corner radius pixel amount.
      */
-    var baselineColor: Int = Color.GRAY
+    var mainCornerRadius: Float = LiveChartAttributes.CORNER_RADIUS
+
+    /**
+     * Second Path corner radius pixel amount.
+     */
+    var secondCornerRadius: Float = LiveChartAttributes.CORNER_RADIUS
 
     /**
      * Baseline color.
      */
-    var boundsLineColor: Int = Color.GRAY
+    var baselineColor: Int = LiveChartAttributes.BASELINE_LINE_COLOR
+
+    /**
+     * Bounds color.
+     */
+    var boundsLineColor: Int = LiveChartAttributes.BOUNDS_LINE_COLOR
+
+    /**
+     * Baseline color.
+     */
+    var guideLineColor: Int = LiveChartAttributes.GUIDELINE_COLOR
 
     /**
      * Path stroke width
