@@ -295,6 +295,8 @@ possible.
 
 Since `1.3.0` LiveChart supports drawing a rounded path instead of straight corners.
 
+<img src="/.sample-images/smooth_path.PNG" height="300"/>
+
 There are two options to enable this feature:
 
 1. Toggle an optimized rounded smooth path with `drawSmoothPath`. 
@@ -307,7 +309,6 @@ livechart.setDataset(dataset)
         .drawSmoothPath()
         .drawDataset()
 ```
-
 
 2. Use the built in Android CornerPathEffect by setting the corner radius in the `LiveChartStyle` properties:
 
@@ -325,10 +326,11 @@ livechart.setDataset(dataset)
 
 ## Guidelines
 
-Since `1.3.0` the chart supports drawing vertical and/or horizontal chart guidelines at *n* number of steps:
+Since `1.3.1` the chart supports drawing vertical and/or horizontal chart guidelines at *n* number of steps:
+
+<img src="/.sample-images/guidelines.PNG" height="300"/>
 
 Simply toggle them and pass the desired number of steps. You can also color them through the `LiveChartStyle.guideLineColor` property:
-
 
 ```kotlin
 livechart.setDataset(dataset)

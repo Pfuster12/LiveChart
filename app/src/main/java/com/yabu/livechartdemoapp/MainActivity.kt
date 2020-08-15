@@ -83,7 +83,6 @@ class MainActivity : AppCompatActivity() {
             secondColor = Color.MAGENTA
             pathStrokeWidth = 8f
             secondPathStrokeWidth = 4f
-            textHeight = 40f
         }
 
         livechart.setDataset(firstDataset)
@@ -106,8 +105,8 @@ class MainActivity : AppCompatActivity() {
         livechartNegative.setDataset(negativeDataset)
             .drawYBounds()
             .drawBaseline()
+            .drawSmoothPath()
             .drawLastPointLabel()
-            .drawFill(false)
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")
                 override fun onTouchCallback(point: DataPoint) {

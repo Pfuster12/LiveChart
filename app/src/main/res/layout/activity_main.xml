@@ -102,13 +102,9 @@
             app:labelTextColor="@color/colorAccent"
             app:pathColor="@color/colorAccent"
             app:pathStrokeWidth="4dp"
-            app:baselineStrokeWidth="4dp"
-            app:baselineDashGap="8dp"
-            app:labelTextHeight="20sp"
             app:overlayCircleColor="@color/colorPrimaryDark"
             app:overlayLineColor="@color/colorPrimary"
-            app:overlayCircleDiameter="8dp"
-            app:baselineColor="@color/colorPrimaryDark"/>
+            app:overlayCircleDiameter="8dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
