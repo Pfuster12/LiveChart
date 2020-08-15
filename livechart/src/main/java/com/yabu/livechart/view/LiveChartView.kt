@@ -322,43 +322,25 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
 
     /**
      * Draw vertical guidelines
+     * @param steps Number of guidelines
      */
     @Suppress("UNUSED")
     @PublicApi
-    fun drawVerticalGuidelines(): LiveChartView {
+    fun drawVerticalGuidelines(steps: Int): LiveChartView {
         drawVerticalGuidelines = true
-
-        return this
-    }
-
-    /**
-     * Draw horizontal guidelines
-     */
-    @Suppress("UNUSED")
-    @PublicApi
-    fun drawHorizontalGuidelines(): LiveChartView {
-        drawHorizontalGuidelines = true
-
-        return this
-    }
-
-    /**
-     * Set vertical guidelines steps
-     */
-    @Suppress("UNUSED")
-    @PublicApi
-    fun setVerticalGuidelineSteps(steps: Int): LiveChartView {
         verticalGuidelineStep = steps
 
         return this
     }
 
     /**
-     * Set horizontal guidelines steps
+     * Draw horizontal guidelines
+     * @param steps Number of guidelines
      */
     @Suppress("UNUSED")
     @PublicApi
-    fun setHorizontalGuidelineSteps(steps: Int): LiveChartView {
+    fun drawHorizontalGuidelines(steps: Int): LiveChartView {
+        drawHorizontalGuidelines = true
         horizontalGuidelineStep = steps
 
         return this

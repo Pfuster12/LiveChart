@@ -216,48 +216,27 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
 
     /**
      * Draw vertical guidelines
+     * @param steps Number of guidelines
      */
     @Suppress("UNUSED")
     @PublicApi
-    fun drawVerticalGuidelines(): LiveChart {
-        livechart.drawVerticalGuidelines()
+    fun drawVerticalGuidelines(steps: Int): LiveChart {
+        livechart.drawVerticalGuidelines(steps)
 
         return this
     }
 
     /**
      * Draw horizontal guidelines
+     * @param steps Number of guidelines
      */
     @Suppress("UNUSED")
     @PublicApi
-    fun drawHorizontalGuidelines(): LiveChart {
-        livechart.drawHorizontalGuidelines()
+    fun drawHorizontalGuidelines(steps: Int): LiveChart {
+        livechart.drawHorizontalGuidelines(steps)
 
         return this
     }
-
-    /**
-     * Set vertical guidelines steps
-     */
-    @Suppress("UNUSED")
-    @PublicApi
-    fun setVerticalGuidelineSteps(steps: Int): LiveChart {
-        livechart.setVerticalGuidelineSteps(steps)
-
-        return this
-    }
-
-    /**
-     * Set horizontal guidelines steps
-     */
-    @Suppress("UNUSED")
-    @PublicApi
-    fun setHorizontalGuidelineSteps(steps: Int): LiveChart {
-        livechart.setHorizontalGuidelineSteps(steps)
-
-        return this
-    }
-
 
     /**
      * Draw on chart and bind overlay to dataset.

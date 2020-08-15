@@ -52,10 +52,8 @@ class MainActivity : AppCompatActivity() {
             .setLiveChartStyle(chartStyle)
             .drawYBounds()
             .drawSmoothPath()
-            .drawVerticalGuidelines()
-            .setVerticalGuidelineSteps(2)
-            .setHorizontalGuidelineSteps(2)
-            .drawHorizontalGuidelines()
+            .drawVerticalGuidelines(4)
+            .drawHorizontalGuidelines(4)
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")
                 override fun onTouchCallback(point: DataPoint) {
