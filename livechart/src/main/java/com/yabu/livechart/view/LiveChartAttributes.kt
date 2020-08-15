@@ -1,7 +1,6 @@
 package com.yabu.livechart.view
 
 import android.graphics.Color
-import android.util.TypedValue
 
 internal object LiveChartAttributes {
     const val STROKE_WIDTH = 4f
@@ -20,7 +19,7 @@ internal object LiveChartAttributes {
 
     const val TRANSPARENT_COLOR = "#00000000"
 
-    const val CORNER_RADIUS = 4f
+    const val CORNER_RADIUS = 0f
 
     const val POSITIVE_COLOR = "#01C194"
 

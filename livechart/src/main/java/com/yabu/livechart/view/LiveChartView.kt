@@ -248,6 +248,8 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     @PublicApi
     fun drawStraightPath(): LiveChartView {
         drawSmoothPath = false
+        chartStyle.mainCornerRadius = 0f
+        chartStyle.secondCornerRadius = 0f
 
         return this
     }
@@ -389,7 +391,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
         style = Paint.Style.STROKE
         strokeWidth = chartStyle.pathStrokeWidth
         setColor()
-        pathEffect = CornerPathEffect(4f)
+        pathEffect = CornerPathEffect(LiveChartAttributes.CORNER_RADIUS)
         strokeCap = Paint.Cap.BUTT
         strokeJoin = Paint.Join.MITER
     }
