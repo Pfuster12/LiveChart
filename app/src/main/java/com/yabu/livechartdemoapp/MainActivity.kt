@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         val chartStyle = LiveChartStyle().apply {
             mainColor = Color.GRAY
             pathStrokeWidth = 8f
+            guideLineColor = Color.BLUE
             secondPathStrokeWidth = 4f
             textHeight = 40f
             textColor = Color.WHITE

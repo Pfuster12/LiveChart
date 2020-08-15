@@ -764,7 +764,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     else
                         chartBounds.end/verticalGuidelineStep)*i,
                     chartBounds.top,
-                    boundsLinePaint
+                    guideLinePaint
                 )
             }
         }
@@ -779,7 +779,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     else
                         chartBounds.end,
                     (chartBounds.bottom/horizontalGuidelineStep)*i,
-                    boundsLinePaint
+                    guideLinePaint
                 )
             }
         }
