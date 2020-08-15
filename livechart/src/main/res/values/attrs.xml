@@ -3,10 +3,14 @@
     <declare-styleable name="LiveChart">
         <attr name="labelTextColor" format="reference|color" />
         <attr name="pathColor" format="reference|color"/>
+        <attr name="secondPathColor" format="reference|color"/>
         <attr name="fillColor" format="reference|color"/>
         <attr name="baselineColor" format="reference|color"/>
+        <attr name="boundsColor" format="reference|color"/>
         <attr name="positiveColor" format="reference|color"/>
         <attr name="negativeColor" format="reference|color"/>
+        <attr name="mainCornerRadius" format="dimension"/>
+        <attr name="secondCornerRadius" format="dimension"/>
         <attr name="pathStrokeWidth" format="dimension"/>
         <attr name="baselineStrokeWidth" format="dimension"/>
         <attr name="baselineDashGap" format="dimension"/>

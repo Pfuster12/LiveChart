@@ -140,12 +140,14 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
     @PublicApi
     fun drawSmoothPath(): LiveChart {
         livechart.drawSmoothPath()
+        overlay.drawSmoothPath()
         return this
     }
 
     @PublicApi
     fun drawStraightPath(): LiveChart {
         livechart.drawStraightPath()
+        overlay.drawStraightPath()
         return this
     }
 
@@ -211,6 +213,51 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
         disableTouchOverlay = true
         return this
     }
+
+    /**
+     * Draw vertical guidelines
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun drawVerticalGuidelines(): LiveChart {
+        livechart.drawVerticalGuidelines()
+
+        return this
+    }
+
+    /**
+     * Draw horizontal guidelines
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun drawHorizontalGuidelines(): LiveChart {
+        livechart.drawHorizontalGuidelines()
+
+        return this
+    }
+
+    /**
+     * Set vertical guidelines steps
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun setVerticalGuidelineSteps(steps: Int): LiveChart {
+        livechart.setVerticalGuidelineSteps(steps)
+
+        return this
+    }
+
+    /**
+     * Set horizontal guidelines steps
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun setHorizontalGuidelineSteps(steps: Int): LiveChart {
+        livechart.setHorizontalGuidelineSteps(steps)
+
+        return this
+    }
+
 
     /**
      * Draw on chart and bind overlay to dataset.

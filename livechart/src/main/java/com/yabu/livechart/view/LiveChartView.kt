@@ -66,6 +66,26 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     private var drawYBounds = false
 
     /**
+     * Y Guidelines display flag.
+     */
+    private var drawVerticalGuidelines = false
+
+    /**
+     * Y Number of guidelines.
+     */
+    private var verticalGuidelineStep = 4
+
+    /**
+     * X Guidelines display flag.
+     */
+    private var drawHorizontalGuidelines = false
+
+    /**
+     * X Number of guidelines.
+     */
+    private var horizontalGuidelineStep = 4
+
+    /**
      * Baseline display flag.
      */
     private var drawBaseline = false
@@ -123,6 +143,8 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     chartStyle.positiveColor)
                 chartStyle.negativeColor = getColor(R.styleable.LiveChart_negativeColor,
                     chartStyle.negativeColor)
+                chartStyle.boundsLineColor = getColor(R.styleable.LiveChart_boundsColor,
+                    chartStyle.boundsLineColor)
 
                 // Width attrs,
                 chartStyle.pathStrokeWidth = getDimension(R.styleable.LiveChart_pathStrokeWidth,
@@ -168,7 +190,8 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
         // paint color
         datasetLinePaint.color = chartStyle.mainColor
         datasetFillPaint.color =chartStyle.mainFillColor
-        yBoundLinePaint.color =chartStyle.boundsLineColor
+        boundsLinePaint.color =chartStyle.boundsLineColor
+        guideLinePaint.color = chartStyle.guideLineColor
         baselinePaint.color = chartStyle.baselineColor
         boundsTextPaint.color = chartStyle.textColor
         secondDatasetPaint.color = chartStyle.secondColor
@@ -296,6 +319,50 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     }
 
     /**
+     * Draw vertical guidelines
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun drawVerticalGuidelines(): LiveChartView {
+        drawVerticalGuidelines = true
+
+        return this
+    }
+
+    /**
+     * Draw horizontal guidelines
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun drawHorizontalGuidelines(): LiveChartView {
+        drawHorizontalGuidelines = true
+
+        return this
+    }
+
+    /**
+     * Set vertical guidelines steps
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun setVerticalGuidelineSteps(steps: Int): LiveChartView {
+        verticalGuidelineStep = steps
+
+        return this
+    }
+
+    /**
+     * Set horizontal guidelines steps
+     */
+    @Suppress("UNUSED")
+    @PublicApi
+    fun setHorizontalGuidelineSteps(steps: Int): LiveChartView {
+        horizontalGuidelineStep = steps
+
+        return this
+    }
+
+    /**
      * Helper to set the chart highlight color according to [baseline]
      */
     private fun Paint.setColor() {
@@ -322,6 +389,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
         style = Paint.Style.STROKE
         strokeWidth = chartStyle.pathStrokeWidth
         setColor()
+        pathEffect = CornerPathEffect(4f)
         strokeCap = Paint.Cap.BUTT
         strokeJoin = Paint.Join.MITER
     }
@@ -348,7 +416,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     private var datasetFillPath = Path()
 
     /**
-     * Line [Paint] for this chart.
+     * Fill [Paint] for this chart.
      */
     private var datasetFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -357,7 +425,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     }
 
     /**
-     * Line [Paint] for this chart.
+     * Baseline Line [Paint] for this chart.
      */
     private var baselinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -374,12 +442,22 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     }
 
     /**
-     * Line [Paint] for this chart.
+     * Bounds [Paint] for this chart.
      */
-    private var yBoundLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private var boundsLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 1f
         color = chartStyle.boundsLineColor
+        strokeCap = Paint.Cap.SQUARE
+    }
+
+    /**
+     * Guideline [Paint] for this chart.
+     */
+    private var guideLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 1f
+        color = chartStyle.guideLineColor
         strokeCap = Paint.Cap.SQUARE
     }
 
@@ -404,7 +482,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     }
 
     /**
-     * End Point Tag [Paint] for this chart.
+     * End Point Tag Text [Paint] for this chart.
      */
     private var endPointTagTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
@@ -413,7 +491,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     }
 
     /**
-     * End Point Tag [Paint] for this chart.
+     * Bounds Text [Paint] for this chart.
      */
     private var boundsTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = chartStyle.textColor
@@ -494,11 +572,10 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
 
             if (drawSmoothPath) {
                 if (dataset.points.size > 1) {
-                    datasetPath = PolyBezierPathUtil
-                        .computePathThroughDataPoints(
-                            dataset.points.map {
-                                EPointF(it.x.xPointToPixels(), it.y.yPointToPixels())
-                            })
+                    datasetPath = PolyBezierPathUtil.computePathThroughDataPoints(
+                        dataset.points.map {
+                            EPointF(it.x.xPointToPixels(), it.y.yPointToPixels())
+                        })
                 }
 
                 if (secondDataset.points.size > 1) {
@@ -513,13 +590,17 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     dataset.points.forEachIndexed { index, point ->
                         // move path to first data point,
                         if (index == 0) {
-                            moveTo(chartBounds.start + point.x.xPointToPixels(),
-                                point.y.yPointToPixels())
+                            moveTo(
+                                chartBounds.start + point.x.xPointToPixels(),
+                                point.y.yPointToPixels()
+                            )
                             return@forEachIndexed
                         }
 
-                        lineTo(chartBounds.start + point.x.xPointToPixels(),
-                            point.y.yPointToPixels())
+                        lineTo(
+                            chartBounds.start + point.x.xPointToPixels(),
+                            point.y.yPointToPixels()
+                        )
                     }
                 }
 
@@ -527,13 +608,17 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     secondDataset.points.forEachIndexed { index, point ->
                         // move path to first data point,
                         if (index == 0) {
-                            moveTo(chartBounds.start + point.x.xPointToPixels(),
-                                point.y.yPointToPixels())
+                            moveTo(
+                                chartBounds.start + point.x.xPointToPixels(),
+                                point.y.yPointToPixels()
+                            )
                             return@forEachIndexed
                         }
 
-                        lineTo(chartBounds.start + point.x.xPointToPixels(),
-                            point.y.yPointToPixels())
+                        lineTo(
+                            chartBounds.start + point.x.xPointToPixels(),
+                            point.y.yPointToPixels()
+                        )
                     }
                 }
             }
@@ -572,7 +657,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     chartBounds.start,
                     chartBounds.bottom,
                     fillColor,
-                    Color.parseColor("#00000000"),
+                    Color.parseColor(LiveChartAttributes.TRANSPARENT_COLOR),
                     Shader.TileMode.CLAMP)
             }
 
@@ -622,7 +707,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                 chartBounds.top,
                 chartBounds.end - chartStyle.chartEndPadding,
                 chartBounds.bottom,
-                yBoundLinePaint)
+                boundsLinePaint)
 
             // LOWER BOUND
             canvas.drawText("%.2f".format(lowerBound),
@@ -679,6 +764,39 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
                     dataset.points.last().y.yPointToPixels() - TAG_PADDING,
                     endPointTagTextPaint)
+            }
+        }
+
+        if (drawVerticalGuidelines) {
+            for (i in 0..verticalGuidelineStep) {
+                // draw vertical guidelines
+                canvas.drawLine((if (drawYBounds)
+                    (chartBounds.end - chartStyle.chartEndPadding)/verticalGuidelineStep
+                else
+                    chartBounds.end/verticalGuidelineStep)*i,
+                    chartBounds.bottom,
+                    (if (drawYBounds)
+                        (chartBounds.end - chartStyle.chartEndPadding)/verticalGuidelineStep
+                    else
+                        chartBounds.end/verticalGuidelineStep)*i,
+                    chartBounds.top,
+                    boundsLinePaint
+                )
+            }
+        }
+
+        if (drawHorizontalGuidelines) {
+            for (i in 0..horizontalGuidelineStep) {
+                // draw vertical guidelines
+                canvas.drawLine(chartBounds.start,
+                    (chartBounds.bottom/horizontalGuidelineStep)*i,
+                    if (drawYBounds)
+                        (chartBounds.end - chartStyle.chartEndPadding)
+                    else
+                        chartBounds.end,
+                    (chartBounds.bottom/horizontalGuidelineStep)*i,
+                    boundsLinePaint
+                )
             }
         }
     }

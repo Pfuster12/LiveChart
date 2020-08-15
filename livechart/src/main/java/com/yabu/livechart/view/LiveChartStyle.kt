@@ -20,7 +20,7 @@ class LiveChartStyle {
     /**
      * Main color
      */
-    var secondColor: Int = Color.GRAY
+    var secondColor: Int = LiveChartAttributes.SECOND_COLOR
 
     /**
      * Positive from baseline fill color.
@@ -48,14 +48,29 @@ class LiveChartStyle {
     var negativeFillColor: Int = Color.parseColor(LiveChartAttributes.NEGATIVE_FILL_COLOR)
 
     /**
-     * Baseline color.
+     * Main Path corner radius pixel amount.
      */
-    var baselineColor: Int = Color.GRAY
+    var mainCornerRadius: Float = LiveChartAttributes.CORNER_RADIUS
+
+    /**
+     * Second Path corner radius pixel amount.
+     */
+    var secondCornerRadius: Float = LiveChartAttributes.CORNER_RADIUS
 
     /**
      * Baseline color.
      */
-    var boundsLineColor: Int = Color.GRAY
+    var baselineColor: Int = LiveChartAttributes.BASELINE_LINE_COLOR
+
+    /**
+     * Bounds color.
+     */
+    var boundsLineColor: Int = LiveChartAttributes.BOUNDS_LINE_COLOR
+
+    /**
+     * Baseline color.
+     */
+    var guideLineColor: Int = LiveChartAttributes.GUIDELINE_COLOR
 
     /**
      * Path stroke width

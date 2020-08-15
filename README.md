@@ -295,7 +295,9 @@ possible.
 
 If you place the LiveChart in a scrollview the touch event gets consumed early.
 
-Unfortunately this is a feature of the Android Touch system. Without ruining the ScrollView functionality from the library side, a working solution is to call the LiveChart view's parent requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) :
+Unfortunately this is a feature of the Android Touch system. Without ruining the ScrollView
+functionality from the library side, a working solution is to call the 
+LiveChart view's parent `requestDisallowInterceptTouchEvent(disallowIntercept: Boolean)` :
 
 ```
 liveChart.setDataset(dataset)
