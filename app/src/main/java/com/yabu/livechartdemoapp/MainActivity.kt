@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
             pathStrokeWidth = 8f
             secondPathStrokeWidth = 4f
             textHeight = 40f
+            textColor = Color.WHITE
             overlayLineColor = Color.BLUE
             overlayCircleDiameter = 32f
             overlayCircleColor = Color.GREEN
@@ -49,6 +50,12 @@ class MainActivity : AppCompatActivity() {
 
         livechartSimple.setDataset(dataset)
             .setLiveChartStyle(chartStyle)
+            .drawYBounds()
+            .drawSmoothPath()
+            .drawVerticalGuidelines()
+            .setVerticalGuidelineSteps(2)
+            .setHorizontalGuidelineSteps(2)
+            .drawHorizontalGuidelines()
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")
                 override fun onTouchCallback(point: DataPoint) {
@@ -82,10 +89,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         livechart.setDataset(firstDataset)
-            .setSecondDataset(secondDataset)
             .setLiveChartStyle(style)
-            .disableTouchOverlay()
             .drawYBounds()
+            .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
+                @SuppressLint("SetTextI18n")
+                override fun onTouchCallback(point: DataPoint) {
+                    livechart.parent
+                        .requestDisallowInterceptTouchEvent(true)
+                }
+
+                override fun onTouchFinished() {
+                    livechart.parent
+                        .requestDisallowInterceptTouchEvent(false)
+                }
+            })
             .drawDataset()
 
         livechartNegative.setDataset(negativeDataset)
@@ -93,6 +110,18 @@ class MainActivity : AppCompatActivity() {
             .drawBaseline()
             .drawLastPointLabel()
             .drawFill(false)
+            .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
+                @SuppressLint("SetTextI18n")
+                override fun onTouchCallback(point: DataPoint) {
+                    livechartNegative.parent
+                        .requestDisallowInterceptTouchEvent(true)
+                }
+
+                override fun onTouchFinished() {
+                    livechartNegative.parent
+                        .requestDisallowInterceptTouchEvent(false)
+                }
+            })
             .drawDataset()
     }
 }

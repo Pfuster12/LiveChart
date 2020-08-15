@@ -15,6 +15,12 @@ internal object LiveChartAttributes {
 
     const val MAIN_COLOR = Color.BLACK
 
+    const val SECOND_COLOR = Color.GRAY
+
+    const val TRANSPARENT_COLOR = "#00000000"
+
+    const val CORNER_RADIUS = 0f
+
     const val POSITIVE_COLOR = "#01C194"
 
     const val FILL_COLOR = "#11303030"
@@ -24,6 +30,12 @@ internal object LiveChartAttributes {
     const val NEGATIVE_COLOR = "#d70a53"
 
     const val NEGATIVE_FILL_COLOR = "#11d70a53"
+
+    const val BOUNDS_LINE_COLOR = Color.GRAY
+
+    const val BASELINE_LINE_COLOR = Color.GRAY
+
+    const val GUIDELINE_COLOR = Color.LTGRAY
 
     const val TAG_WIDTH = 120f
 

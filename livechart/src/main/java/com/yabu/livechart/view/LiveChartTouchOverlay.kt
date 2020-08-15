@@ -3,22 +3,26 @@ package com.yabu.livechart.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.DashPathEffect
 import android.graphics.Path
 import android.graphics.PathMeasure
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
 import com.yabu.livechart.model.DataPoint
 import com.yabu.livechart.model.Dataset
+import com.yabu.livechart.utils.EPointF
+import com.yabu.livechart.utils.PolyBezierPathUtil
 import com.yabu.livechart.utils.PublicApi
 import com.yabu.livechart.view.LiveChart.OnTouchCallback
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 /**
  * Touch overlay for the [LiveChartView]. Perform touch event draws in this class
@@ -58,6 +62,11 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     private var dataset: Dataset = Dataset.new()
 
     /**
+     * Smooth Path flag
+     */
+    private var drawSmoothPath = false
+
+    /**
      * Second dataset
      */
     private var secondDataset: Dataset = Dataset.new()
@@ -66,6 +75,16 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
      * Path generated from dataset points.
      */
     private val pathMeasure = PathMeasure()
+
+    /**
+     * Store path coordinates array.
+     */
+    private val pathCoordinates = mutableListOf<FloatArray>()
+
+    /**
+     * Store current rounded X touch position
+     */
+    private var oldRoundedPos = 0
 
     /**
      * Y Bounds display flag.
@@ -118,6 +137,26 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     }
 
     /**
+     * Draw smooth path flag.
+     */
+    @PublicApi
+    fun drawSmoothPath(): LiveChartTouchOverlay{
+        drawSmoothPath = true
+
+        return this
+    }
+
+    /**
+     * Draw straight path flag.
+     */
+    @PublicApi
+    fun drawStraightPath(): LiveChartTouchOverlay {
+        drawSmoothPath = false
+
+        return this
+    }
+
+    /**
      * Set the [Dataset] this overlay responds to.
      * @param dataset
      */
@@ -165,26 +204,63 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     @PublicApi
     fun bindToDataset() {
         this.post {
-            val path = Path().apply {
-                dataset.points.forEachIndexed { index, point ->
-                    // move path to first data point,
-                    if (index == 0) {
-                        moveTo(chartBounds.start + point.x.xPointToPixels(),
-                            point.y.yPointToPixels())
-                        return@forEachIndexed
-                    }
+            val path = if (drawSmoothPath) {
+                PolyBezierPathUtil.computePathThroughDataPoints(
+                        dataset.points.map {
+                            EPointF(it.x.xPointToPixels(), it.y.yPointToPixels())
+                        })
+            } else {
+                Path().apply {
+                    dataset.points.forEachIndexed { index, point ->
+                        // move path to first data point,
+                        if (index == 0) {
+                            moveTo(
+                                chartBounds.start + point.x.xPointToPixels(),
+                                point.y.yPointToPixels()
+                            )
+                            return@forEachIndexed
+                        }
 
-                    lineTo(chartBounds.start + point.x.xPointToPixels(),
-                        point.y.yPointToPixels())
+                        lineTo(
+                            chartBounds.start + point.x.xPointToPixels(),
+                            point.y.yPointToPixels()
+                        )
+                    }
                 }
             }
 
             // Measure the dataset path.
             pathMeasure.setPath(path, false)
 
+            extractCoordinatesFromPath()
+
             invalidate()
         }
     }
+
+    /**
+     * Divide path length in equal parts of the chart width and extract coordinates array
+     * of position in length.
+     */
+    private fun extractCoordinatesFromPath() {
+        pathCoordinates.clear()
+
+        val chartWidth = chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f
+
+        for (i in 0..chartWidth.toInt()) {
+            val coordinates = FloatArray(2)
+
+            val pos = i.toFloat()/chartWidth
+
+            pathMeasure.getPosTan(pathMeasure.length*pos,
+                coordinates,
+                null)
+
+            pathCoordinates.add(coordinates)
+
+        }
+    }
+
     /**
      * Find the bounds data point to screen pixels ratio for the Y Axis.
      */
@@ -251,47 +327,61 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val coordinates = FloatArray(2)
         return when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                val xNormalise = event.x /
-                        (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
+                // Extract coordinate from stored array array
+                val roundedPos = (event.x).roundToInt()
 
-                overlay.alpha = 1f
+                if (roundedPos == oldRoundedPos) {
+                    return true
+                }
 
-                // Get coordinate in path from x
-                pathMeasure.getPosTan(pathMeasure.length*xNormalise,
-                    coordinates,
-                    null)
+                val coordinates = pathCoordinates.firstOrNull {
+                    (it[0]).roundToInt() == roundedPos
+                }
 
-                overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
-                overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+                oldRoundedPos = roundedPos
 
-                touchListener?.onTouchCallback(DataPoint(
-                    x = coordinates[0].xPixelsToPoint(),
-                    y = coordinates[1].yPixelsToPoint()
-                ))
+                if (coordinates != null) {
+                    overlay.alpha = 1f
+
+                    overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+                    overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+
+                    touchListener?.onTouchCallback(DataPoint(
+                        x = coordinates[0].xPixelsToPoint(),
+                        y = coordinates[1].yPixelsToPoint()
+                    ))
+                }
 
                 true
             }
 
             MotionEvent.ACTION_MOVE -> {
-                val xNormalise = event.x /
-                        (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
+                // Extract coordinate from stored array array
+                val roundedPos = (event.x).roundToInt()
 
-                // Position overlay in coordinate,
-                // Get coordinate in path from x
-                pathMeasure.getPosTan(pathMeasure.length*xNormalise,
-                    coordinates,
-                    null)
+                if (roundedPos == oldRoundedPos) {
+                    return true
+                }
 
-                overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
-                overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+                val coordinates = pathCoordinates.firstOrNull {
+                    (it[0]).roundToInt() == roundedPos
+                }
 
-                touchListener?.onTouchCallback(DataPoint(
-                    x = coordinates[0].xPixelsToPoint(),
-                    y = coordinates[1].yPixelsToPoint()
-                ))
+                oldRoundedPos = roundedPos
+
+                if (coordinates != null) {
+                    overlay.alpha = 1f
+
+                    overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+                    overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+
+                    touchListener?.onTouchCallback(DataPoint(
+                        x = coordinates[0].xPixelsToPoint(),
+                        y = coordinates[1].yPixelsToPoint()
+                    ))
+                }
 
                 true
             }
