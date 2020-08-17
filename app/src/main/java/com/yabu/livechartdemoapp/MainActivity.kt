@@ -30,31 +30,17 @@ class MainActivity : AppCompatActivity() {
         val chartStyle = LiveChartStyle().apply {
             mainColor = Color.GRAY
             pathStrokeWidth = 8f
-            guideLineColor = Color.BLUE
             secondPathStrokeWidth = 4f
             textHeight = 40f
-            textColor = Color.WHITE
+            textColor = Color.GRAY
             overlayLineColor = Color.BLUE
             overlayCircleDiameter = 32f
             overlayCircleColor = Color.GREEN
         }
 
-        val secondDataset = Dataset(mutableListOf(DataPoint(0f, 0f),
-            DataPoint(1f, 1f),
-            DataPoint(2f, 2f),
-            DataPoint(3f, 3f),
-            DataPoint(4f, 4f),
-            DataPoint(5f, 5f),
-            DataPoint(6f, 10f),
-            DataPoint(7f, 18f)
-        ))
-
         livechartSimple.setDataset(dataset)
             .setLiveChartStyle(chartStyle)
-            .drawYBounds()
             .drawSmoothPath()
-            .drawVerticalGuidelines(4)
-            .drawHorizontalGuidelines(4)
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")
                 override fun onTouchCallback(point: DataPoint) {
@@ -69,26 +55,24 @@ class MainActivity : AppCompatActivity() {
             })
             .drawDataset()
 
-        val firstDataset = Dataset(mutableListOf(DataPoint(0f, 1f),
-            DataPoint(1f, 2f),
-            DataPoint(2f, 3f),
-            DataPoint(3f, 4f),
-            DataPoint(4f, 5f),
-            DataPoint(5f, 8f),
-            DataPoint(6f, 13f),
-            DataPoint(7f, 21f)
-        ))
-
         val style = LiveChartStyle().apply {
-            mainColor = Color.GRAY
-            secondColor = Color.MAGENTA
-            pathStrokeWidth = 8f
+            mainColor = Color.parseColor("#01C194")
+            textColor = Color.GRAY
+            positiveColor = Color.parseColor("#01C194")
+            positiveFillColor = Color.parseColor("#01C194")
+            negativeColor = Color.parseColor("#d70a53")
+            negativeFillColor = Color.parseColor("#d70a53")
+            pathStrokeWidth = 6f
             secondPathStrokeWidth = 4f
         }
 
-        livechart.setDataset(firstDataset)
+        livechart.setDataset(dataset)
             .setLiveChartStyle(style)
             .drawYBounds()
+            .drawFill()
+            .drawBaseline()
+            .drawLastPointLabel()
+            .drawBaselineConditionalColor()
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")
                 override fun onTouchCallback(point: DataPoint) {
@@ -104,9 +88,14 @@ class MainActivity : AppCompatActivity() {
             .drawDataset()
 
         livechartNegative.setDataset(negativeDataset)
+            .setLiveChartStyle(style)
             .drawYBounds()
-            .drawBaseline()
             .drawSmoothPath()
+            .drawBaseline()
+            .drawFill()
+            .drawHorizontalGuidelines(steps = 4)
+            .drawVerticalGuidelines(steps = 4)
+            .drawBaselineConditionalColor()
             .drawLastPointLabel()
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")
