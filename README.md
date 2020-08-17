@@ -125,6 +125,13 @@ livechart.setDataset(dataset)
     .drawFill(withGradient = true)
     // draws the color of the path and fill conditional to being above/below the baseline datapoint
     .drawBaselineConditionalColor()
+    // Draw Guidelines in the background
+    .drawVerticalGuidelines(steps=4)
+    .drawHorizontalGuidelines(steps=4)
+    // Draw smooth path
+    .drawSmoothPath()
+    // Draw last point tag label
+    .drawLastPointLabel()
     .drawDataset()
 ```
 
