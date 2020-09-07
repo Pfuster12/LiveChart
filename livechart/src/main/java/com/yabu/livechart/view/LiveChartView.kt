@@ -611,7 +611,8 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                 dataset.points.forEachIndexed { index, point ->
                     // move path to first data point,
                     if (index == 0) {
-                        moveTo(chartBounds.start, baseline.yPointToPixels())
+                        moveTo(chartBounds.start + point.x.xPointToPixels(),
+                            point.y.yPointToPixels())
                         return@forEachIndexed
                     }
 
@@ -620,7 +621,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                 }
                 lineTo(chartBounds.start + dataset.points.last().x.xPointToPixels(),
                     chartBounds.bottom)
-                lineTo(chartBounds.start,
+                lineTo(chartBounds.start + dataset.points.first().x.xPointToPixels(),
                     chartBounds.bottom)
             }
 
@@ -643,6 +644,8 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     fillColor,
                     Color.parseColor(LiveChartAttributes.TRANSPARENT_COLOR),
                     Shader.TileMode.CLAMP)
+            } else {
+                datasetFillPaint.color = fillColor
             }
 
             setChartHighlightColor()

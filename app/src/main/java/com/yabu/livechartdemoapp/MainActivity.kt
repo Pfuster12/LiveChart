@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         livechart.setDataset(dataset)
             .setLiveChartStyle(style)
             .drawYBounds()
-            .drawFill()
+            .drawFill(withGradient = true)
             .drawBaseline()
             .drawLastPointLabel()
             .drawBaselineConditionalColor()
