@@ -2,6 +2,7 @@ package com.yabu.livechart.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import com.yabu.livechart.model.DataPoint
@@ -168,6 +169,16 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
     fun drawYBounds(): LiveChart {
         livechart.drawYBounds()
         overlay.drawYBounds()
+        return this
+    }
+
+    /**
+     * Set the Y Axis horizontal gravity (Start or End).
+     */
+    @PublicApi
+    fun setYAxisGravity(gravity: Int): LiveChart {
+        livechart.setYAxisGravity(gravity)
+
         return this
     }
 

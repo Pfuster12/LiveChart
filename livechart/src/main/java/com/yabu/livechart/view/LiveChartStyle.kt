@@ -98,7 +98,7 @@ class LiveChartStyle {
     var baselineDashLineGap = LiveChartAttributes.DASH_LINE_GAP
 
     /**
-     * Baseline dash line gap width
+     * Axis Padding
      */
     var chartEndPadding = LiveChartAttributes.CHART_END_PADDING
 

@@ -3,6 +3,7 @@ package com.yabu.livechartdemoapp
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import com.yabu.livechart.model.DataPoint
 import com.yabu.livechart.model.Dataset
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity() {
             .drawFill(withGradient = true)
             .drawBaseline()
             .drawLastPointLabel()
+            .setYAxisGravity(Gravity.START)
             .drawBaselineConditionalColor()
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")

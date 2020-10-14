@@ -3,6 +3,7 @@ package com.yabu.livechart.view
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
@@ -64,6 +65,11 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
      * Y Bounds display flag.
      */
     private var drawYBounds = false
+
+    /**
+     * Y Bounds gravity.
+     */
+    private var yAxisGravity = Gravity.END
 
     /**
      * Y Guidelines display flag.
@@ -281,6 +287,16 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     @PublicApi
     fun drawYBounds(): LiveChartView {
         drawYBounds = true
+
+        return this
+    }
+
+    /**
+     * Set the Y Axis horizontal gravity (Start or End).
+     */
+    @PublicApi
+    fun setYAxisGravity(gravity: Int): LiveChartView {
+        yAxisGravity = gravity
 
         return this
     }
@@ -722,45 +738,91 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
         }
 
         if (drawYBounds) {
-            // draw y Bounds line,
-            canvas.drawLine(chartBounds.end - chartStyle.chartEndPadding,
-                chartBounds.top,
-                chartBounds.end - chartStyle.chartEndPadding,
-                chartBounds.bottom,
-                boundsLinePaint)
+            when (yAxisGravity) {
+                Gravity.START -> {
+                    // draw y Bounds line,
+                    canvas.drawLine(chartBounds.start + chartStyle.chartEndPadding,
+                        chartBounds.top,
+                        chartBounds.start + chartStyle.chartEndPadding,
+                        chartBounds.bottom,
+                        boundsLinePaint)
 
-            // LOWER BOUND
-            canvas.drawText("%.2f".format(lowerBound),
-                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
-                chartBounds.bottom,
-                boundsTextPaint)
+                    // LOWER BOUND
+                    canvas.drawText("%.2f".format(lowerBound),
+                        chartBounds.start + TAG_PADDING,
+                        chartBounds.bottom,
+                        boundsTextPaint)
 
-            // FIRST QUARTER BOUND
-            canvas.drawText(
-                "%.2f".format(upperBound-(upperBound - lowerBound)/4f),
-                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
-                chartBounds.top + chartBounds.bottom/4f,
-                boundsTextPaint)
+                    // FIRST QUARTER BOUND
+                    canvas.drawText(
+                        "%.2f".format(upperBound-(upperBound - lowerBound)/4f),
+                        chartBounds.start + TAG_PADDING,
+                        chartBounds.top + chartBounds.bottom/4f,
+                        boundsTextPaint)
 
-            // MIDDLE BOUND
-            canvas.drawText(
-                "%.2f".format(upperBound-(upperBound - lowerBound)/2f),
-                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
-                chartBounds.top + chartBounds.bottom/2f,
-                boundsTextPaint)
+                    // MIDDLE BOUND
+                    canvas.drawText(
+                        "%.2f".format(upperBound-(upperBound - lowerBound)/2f),
+                        chartBounds.start + TAG_PADDING,
+                        chartBounds.top + chartBounds.bottom/2f,
+                        boundsTextPaint)
 
-            // THIRD QUARTER BOUND
-            canvas.drawText(
-                "%.2f".format(upperBound-(upperBound - lowerBound)*0.75f),
-                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
-                chartBounds.top + chartBounds.bottom*0.75f,
-                boundsTextPaint)
+                    // THIRD QUARTER BOUND
+                    canvas.drawText(
+                        "%.2f".format(upperBound-(upperBound - lowerBound)*0.75f),
+                        chartBounds.start + TAG_PADDING,
+                        chartBounds.top + chartBounds.bottom*0.75f,
+                        boundsTextPaint)
 
-            // UPPER BOUND
-            canvas.drawText("%.2f".format(upperBound),
-                chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
-                chartBounds.top,
-                boundsTextPaint)
+                    // UPPER BOUND
+                    canvas.drawText("%.2f".format(upperBound),
+                        chartBounds.start + TAG_PADDING,
+                        chartBounds.top,
+                        boundsTextPaint)
+                }
+
+                Gravity.END -> {
+                    // draw y Bounds line,
+                    canvas.drawLine(chartBounds.end - chartStyle.chartEndPadding,
+                        chartBounds.top,
+                        chartBounds.end - chartStyle.chartEndPadding,
+                        chartBounds.bottom,
+                        boundsLinePaint)
+
+                    // LOWER BOUND
+                    canvas.drawText("%.2f".format(lowerBound),
+                        chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
+                        chartBounds.bottom,
+                        boundsTextPaint)
+
+                    // FIRST QUARTER BOUND
+                    canvas.drawText(
+                        "%.2f".format(upperBound-(upperBound - lowerBound)/4f),
+                        chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
+                        chartBounds.top + chartBounds.bottom/4f,
+                        boundsTextPaint)
+
+                    // MIDDLE BOUND
+                    canvas.drawText(
+                        "%.2f".format(upperBound-(upperBound - lowerBound)/2f),
+                        chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
+                        chartBounds.top + chartBounds.bottom/2f,
+                        boundsTextPaint)
+
+                    // THIRD QUARTER BOUND
+                    canvas.drawText(
+                        "%.2f".format(upperBound-(upperBound - lowerBound)*0.75f),
+                        chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
+                        chartBounds.top + chartBounds.bottom*0.75f,
+                        boundsTextPaint)
+
+                    // UPPER BOUND
+                    canvas.drawText("%.2f".format(upperBound),
+                        chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
+                        chartBounds.top,
+                        boundsTextPaint)
+                }
+            }
 
             // Last Point Label
             if (drawLastPointLabel) {
