@@ -22,7 +22,7 @@ import com.yabu.livechart.utils.PublicApi
  * @param context
  * @param attrs
  */
-class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+class LiveChart(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
 
     interface OnTouchCallback {
         fun onTouchCallback(point: DataPoint)
