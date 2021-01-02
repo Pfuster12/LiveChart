@@ -169,10 +169,37 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
     }
 
     /**
+     * Reset the chart to defaults.
+     */
+    @PublicApi
+    fun reset() {
+        baseline = 0f
+        secondDataset = Dataset.new()
+        upperBound = 0f
+        lowerBound = 0f
+        drawYBounds = false
+        yAxisGravity = Gravity.END
+        drawVerticalGuidelines = false
+        verticalGuidelineStep = 4
+        drawHorizontalGuidelines = false
+        horizontalGuidelineStep = 4
+        drawBaseline = false
+        drawSmoothPath = false
+        drawFill = false
+        drawGradientFill = true
+        drawLastPointLabel = false
+        drawBaselineConditionalColor = false
+        manualBaseline = false
+    }
+
+    /**
      * Set the [dataset] of this chart.
      */
     @PublicApi
     fun setDataset(dataset: Dataset): LiveChartView {
+        // reset the chart to defaults.
+        reset()
+
         this.dataset = dataset
         return this
     }
