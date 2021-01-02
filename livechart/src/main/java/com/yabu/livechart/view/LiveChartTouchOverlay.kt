@@ -7,6 +7,7 @@ import android.graphics.Path
 import android.graphics.PathMeasure
 import android.util.AttributeSet
 import android.util.DisplayMetrics
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -128,6 +129,18 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     }
 
     /**
+     * Reset the chart to defaults.
+     */
+    @PublicApi
+    fun reset() {
+        dataset = Dataset.new()
+        drawSmoothPath = false
+        secondDataset = Dataset.new()
+        oldRoundedPos = 0
+        drawYBounds = false
+    }
+
+    /**
      * Draw Y bounds flag.
      */
     fun drawYBounds(): LiveChartTouchOverlay {
@@ -161,6 +174,8 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
      * @param dataset
      */
     fun setDataset(dataset: Dataset): LiveChartTouchOverlay {
+        reset()
+
         this.dataset = dataset
 
         return this

@@ -65,6 +65,14 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
     }
 
     /**
+     * Reset the chart to defaults.
+     */
+    @PublicApi
+    fun reset() {
+        livechart.reset()
+    }
+
+    /**
      * Set the [dataset] of this chart.
      */
     @PublicApi
