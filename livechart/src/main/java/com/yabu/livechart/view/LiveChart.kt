@@ -115,6 +115,15 @@ class LiveChart(context: Context, attrs: AttributeSet? = null) : FrameLayout(con
     }
 
     /**
+     * Sticky OverLay flag.
+     */
+    @PublicApi
+    fun stickyOverLay(): LiveChart {
+        overlay.stickyOverLay()
+        return this
+    }
+
+    /**
      * Draw baseline automatically from first point.
      */
     @Suppress("UNUSED")

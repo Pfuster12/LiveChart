@@ -6,12 +6,10 @@ import android.content.res.ColorStateList
 import android.graphics.Path
 import android.graphics.PathMeasure
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
 import com.yabu.livechart.model.DataPoint
@@ -95,6 +93,11 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
      * [OnTouchCallback] listener.
      */
     private var touchListener: OnTouchCallback? = null
+    /**
+     * to keep overlay line on the graph Flag
+     */
+    private var stickyOverLay = false
+
 
     init {
         clipChildren = false
@@ -197,7 +200,14 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
 
         return this
     }
-
+    /**
+     * Sticky OverLay  flag.
+     */
+    @PublicApi
+    fun stickyOverLay(): LiveChartTouchOverlay{
+        stickyOverLay = true
+        return this
+    }
     /**
      * Bind the overlay to the dataset set in this [LiveChartTouchOverlay].
      */
@@ -391,7 +401,8 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
             MotionEvent.ACTION_OUTSIDE -> {
                 touchListener?.onTouchFinished()
 
-                overlay.alpha = 0f
+                if(!stickyOverLay)
+                    overlay.alpha = 0f
                 true
             }
 

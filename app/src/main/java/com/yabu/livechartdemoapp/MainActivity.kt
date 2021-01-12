@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.yabu.livechart.model.DataPoint
-import com.yabu.livechart.model.Dataset
 import com.yabu.livechart.view.LiveChart
 import com.yabu.livechart.view.LiveChartStyle
 import kotlinx.android.synthetic.main.activity_main.*
@@ -71,6 +70,7 @@ class MainActivity : AppCompatActivity() {
             .drawYBounds()
             .drawFill(withGradient = true)
             .drawBaseline()
+            .stickyOverLay()
             .drawLastPointLabel()
             .drawBaselineConditionalColor()
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
@@ -94,7 +94,8 @@ class MainActivity : AppCompatActivity() {
             .drawBaseline()
             .drawFill()
             .drawHorizontalGuidelines(steps = 4)
-            .drawVerticalGuidelines(steps = 4)
+            .drawVerticalGuidelines(steps = 4)            .stickyOverLay()
+
             .drawBaselineConditionalColor()
             .drawLastPointLabel()
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
