@@ -550,7 +550,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
         } else {
             when (yAxisGravity) {
                 Gravity.START -> {
-                    dataset.points.last().x / (chartBounds.end)
+                    dataset.points.last().x / chartBounds.end
                 }
                 Gravity.END -> {
                     dataset.points.last().x /
@@ -628,15 +628,27 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                     dataset.points.forEachIndexed { index, point ->
                         // move path to first data point,
                         if (index == 0) {
-                            moveTo(
-                                chartBounds.start + point.x.xPointToPixels(),
-                                point.y.yPointToPixels()
-                            )
+                            when (yAxisGravity) {
+                                Gravity.START -> {
+                                    moveTo(
+                                        chartBounds.start + point.x.xPointToPixels() +
+                                        if (drawYBounds) chartStyle.chartEndPadding else 0f,
+                                        point.y.yPointToPixels()
+                                    )
+                                }
+                                Gravity.END -> {
+                                    moveTo(
+                                        chartBounds.start + point.x.xPointToPixels(),
+                                        point.y.yPointToPixels()
+                                    )
+                                }
+                            }
                             return@forEachIndexed
                         }
 
                         lineTo(
-                            chartBounds.start + point.x.xPointToPixels(),
+                            chartBounds.start + point.x.xPointToPixels() +
+                                    if (drawYBounds) chartStyle.chartEndPadding else 0f,
                             point.y.yPointToPixels()
                         )
                     }
@@ -804,18 +816,19 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
             // LOWER BOUND
             canvas.drawText("%.2f".format(lowerBound),
                 when (yAxisGravity) {
-                    Gravity.START -> chartBounds.start + TAG_PADDING
+                    Gravity.START -> chartBounds.start + chartStyle.chartEndPadding - TAG_WIDTH + TAG_PADDING
                     Gravity.END -> chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING
                     else -> chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING
                 },
                 chartBounds.bottom,
                 boundsTextPaint)
 
+            // Y axis text
             for (i in 1 until horizontalGuidelineStep) {
                 canvas.drawText("%.2f".format(
                     (upperBound - ((upperBound-lowerBound)/horizontalGuidelineStep)*i)),
                     when (yAxisGravity) {
-                        Gravity.START -> chartBounds.start + TAG_PADDING
+                        Gravity.START -> chartBounds.start + chartStyle.chartEndPadding - TAG_WIDTH + TAG_PADDING
                         Gravity.END -> chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING
                         else -> chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING
                     },
@@ -826,7 +839,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
             // UPPER BOUND
             canvas.drawText("%.2f".format(upperBound),
                 when (yAxisGravity) {
-                    Gravity.START -> chartBounds.start + TAG_PADDING
+                    Gravity.START -> chartBounds.start + chartStyle.chartEndPadding - TAG_WIDTH + TAG_PADDING
                     Gravity.END -> chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING
                     else -> chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING
                 },
@@ -835,24 +848,54 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
 
             // Last Point Label
             if (drawLastPointLabel) {
+                when (yAxisGravity) {
+                    Gravity.START -> {
+
+                    }
+                    Gravity.END -> {
+
+                    }
+                }
                 // draw end tag line
-                canvas.drawLine(chartBounds.start,
+                canvas.drawLine(
+                    when (yAxisGravity) {
+                        Gravity.START -> chartBounds.start + chartStyle.chartEndPadding
+                        Gravity.END -> chartBounds.start
+                        else -> chartBounds.start
+                    },
                     dataset.points.last().y.yPointToPixels(),
-                    chartBounds.end - chartStyle.chartEndPadding,
+                    when (yAxisGravity) {
+                        Gravity.START -> chartBounds.end
+                        Gravity.END -> chartBounds.end - chartStyle.chartEndPadding
+                        else -> chartBounds.end - chartStyle.chartEndPadding
+                    },
                     dataset.points.last().y.yPointToPixels(),
                     endPointLinePaint)
 
                 // TAG
-                canvas.drawRect(chartBounds.end - chartStyle.chartEndPadding,
+                canvas.drawRect(
+                    when (yAxisGravity) {
+                        Gravity.START -> chartBounds.start + chartStyle.chartEndPadding - TAG_WIDTH
+                        Gravity.END -> chartBounds.end - chartStyle.chartEndPadding
+                        else -> chartBounds.end - chartStyle.chartEndPadding
+                    },
                     dataset.points.last().y.yPointToPixels() -
                             chartStyle.textHeight -
                             TAG_PADDING,
-                    chartBounds.end - chartStyle.chartEndPadding + TAG_WIDTH,
+                    when (yAxisGravity) {
+                        Gravity.START -> chartBounds.start + chartStyle.chartEndPadding
+                        Gravity.END -> chartBounds.end - chartStyle.chartEndPadding + TAG_WIDTH
+                        else -> chartBounds.end - chartStyle.chartEndPadding + TAG_WIDTH
+                    },
                     dataset.points.last().y.yPointToPixels(),
                     endPointTagPaint)
 
                 canvas.drawText("%.2f".format(dataset.points.last().y),
-                    chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING,
+                    when (yAxisGravity) {
+                        Gravity.START -> chartBounds.start + chartStyle.chartEndPadding - TAG_WIDTH + TAG_PADDING
+                        Gravity.END ->  chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING
+                        else ->  chartBounds.end - chartStyle.chartEndPadding + TAG_PADDING
+                    },
                     dataset.points.last().y.yPointToPixels() - TAG_PADDING,
                     endPointTagTextPaint)
             }
