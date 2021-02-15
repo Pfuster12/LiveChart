@@ -6,13 +6,10 @@ import android.content.res.ColorStateList
 import android.graphics.Path
 import android.graphics.PathMeasure
 import android.util.AttributeSet
-import android.util.DisplayMetrics
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
 import com.yabu.livechart.model.DataPoint
@@ -93,6 +90,11 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     private var drawYBounds = false
 
     /**
+     * Always display flag.
+     */
+    private var alwaysDisplay = false
+
+    /**
      * [OnTouchCallback] listener.
      */
     private var touchListener: OnTouchCallback? = null
@@ -138,6 +140,12 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
         secondDataset = Dataset.new()
         oldRoundedPos = 0
         drawYBounds = false
+    }
+
+    @PublicApi
+    fun alwaysDisplay() {
+        overlay.alpha = 1f
+        alwaysDisplay = true
     }
 
     /**
@@ -406,7 +414,9 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
             MotionEvent.ACTION_OUTSIDE -> {
                 touchListener?.onTouchFinished()
 
-                overlay.alpha = 0f
+                if (!alwaysDisplay) {
+                    overlay.alpha = 0f
+                }
                 true
             }
 

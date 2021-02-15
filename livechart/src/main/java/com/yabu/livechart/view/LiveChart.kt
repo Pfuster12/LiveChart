@@ -69,6 +69,7 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
      */
     @PublicApi
     fun reset() {
+        disableTouchOverlay = false
         livechart.reset()
     }
 
@@ -253,6 +254,17 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
     @PublicApi
     fun drawHorizontalGuidelines(steps: Int): LiveChart {
         livechart.drawHorizontalGuidelines(steps)
+
+        return this
+    }
+
+    /**
+     * Show Overlay by default, not just on touch.
+     */
+    @PublicApi
+    fun drawTouchOverlayAlways(): LiveChart {
+        disableTouchOverlay = false
+        overlay.alwaysDisplay()
 
         return this
     }
