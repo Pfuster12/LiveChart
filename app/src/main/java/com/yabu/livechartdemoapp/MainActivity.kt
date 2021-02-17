@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         livechartSimple.setDataset(dataset)
             .setLiveChartStyle(chartStyle)
+            .drawTouchOverlayAlways()
             .drawSmoothPath()
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")

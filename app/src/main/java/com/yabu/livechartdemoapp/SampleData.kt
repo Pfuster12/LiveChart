@@ -235,7 +235,7 @@ object SampleData {
 
         val data = Gson().fromJson(json, TestDataResponse::class.java)
         return Dataset(data.mapIndexed { index, it ->
-            DataPoint(index.toFloat() + 16, it.close.toFloat())
+            DataPoint(index.toFloat(), it.close.toFloat())
         }.toMutableList())
     }
 

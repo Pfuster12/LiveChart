@@ -239,6 +239,17 @@ class LiveChart(context: Context, attrs: AttributeSet? = null) : FrameLayout(con
     }
 
     /**
+     * Show Overlay by default, not just on touch.
+     */
+    @PublicApi
+    fun drawTouchOverlayAlways(): LiveChart {
+        disableTouchOverlay = false
+        overlay.alwaysDisplay()
+
+        return this
+    }
+
+    /**
      * Draw on chart and bind overlay to dataset.
      */
     @PublicApi

@@ -7,6 +7,7 @@ import android.graphics.Path
 import android.graphics.PathMeasure
 import android.util.AttributeSet
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -20,8 +21,10 @@ import com.yabu.livechart.utils.EPointF
 import com.yabu.livechart.utils.PolyBezierPathUtil
 import com.yabu.livechart.utils.PublicApi
 import com.yabu.livechart.view.LiveChart.OnTouchCallback
+import java.lang.Exception
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.round
 import kotlin.math.roundToInt
 
 /**
@@ -87,6 +90,11 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     private var oldRoundedPos = 0
 
     /**
+     * Always display flag.
+     */
+    private var alwaysDisplay = false
+
+    /**
      * Y Bounds display flag.
      */
     private var drawYBounds = false
@@ -144,6 +152,12 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
         drawSmoothPath = true
 
         return this
+    }
+
+    @PublicApi
+    fun alwaysDisplay() {
+        overlay.alpha = 1f
+        alwaysDisplay = true
     }
 
     /**
@@ -233,6 +247,15 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
             pathMeasure.setPath(path, false)
 
             extractCoordinatesFromPath()
+
+            try {
+                // Set to default in the middle of the path
+                val coordinates = pathCoordinates[round(pathCoordinates.size.div(2).toFloat()).toInt()]
+                overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+                overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+            } catch (e: Exception) {
+                Log.e("Overlay", e.message.toString())
+            }
 
             invalidate()
         }
@@ -391,7 +414,9 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
             MotionEvent.ACTION_OUTSIDE -> {
                 touchListener?.onTouchFinished()
 
-                overlay.alpha = 0f
+                if (!alwaysDisplay) {
+                    overlay.alpha = 0f
+                }
                 true
             }
 
