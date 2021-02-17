@@ -6,6 +6,7 @@ import android.content.res.ColorStateList
 import android.graphics.Path
 import android.graphics.PathMeasure
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -83,6 +84,11 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
      * Store current rounded X touch position
      */
     private var oldRoundedPos = 0
+
+    /**
+     * Y Bounds gravity.
+     */
+    private var yAxisGravity = Gravity.END
 
     /**
      * Y Bounds display flag.
@@ -178,6 +184,16 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     }
 
     /**
+     * Set the Y Axis horizontal gravity (Start or End).
+     */
+    @PublicApi
+    fun setYAxisGravity(gravity: Int): LiveChartTouchOverlay {
+        yAxisGravity = gravity
+
+        return this
+    }
+
+    /**
      * Set the [Dataset] this overlay responds to.
      * @param dataset
      */
@@ -237,10 +253,21 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
                     dataset.points.forEachIndexed { index, point ->
                         // move path to first data point,
                         if (index == 0) {
-                            moveTo(
-                                chartBounds.start + point.x.xPointToPixels(),
-                                point.y.yPointToPixels()
-                            )
+                            when (yAxisGravity) {
+                                Gravity.START -> {
+                                    moveTo(
+                                        chartBounds.start + point.x.xPointToPixels() +
+                                                if (drawYBounds) chartStyle.chartEndPadding else 0f,
+                                        point.y.yPointToPixels()
+                                    )
+                                }
+                                Gravity.END -> {
+                                    moveTo(
+                                        chartBounds.start + point.x.xPointToPixels(),
+                                        point.y.yPointToPixels()
+                                    )
+                                }
+                            }
                             return@forEachIndexed
                         }
 
@@ -332,8 +359,19 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
                     min(dataset.points.first().x, secondDataset.points.first().x)) /
                     (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
         } else {
-            dataset.points.last().x /
-                    (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
+            when (yAxisGravity) {
+                Gravity.START -> {
+                    dataset.points.last().x / chartBounds.end
+                }
+                Gravity.END -> {
+                    dataset.points.last().x /
+                            (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
+                }
+                else -> {
+                    dataset.points.last().x /
+                            (chartBounds.end - if (drawYBounds) chartStyle.chartEndPadding else 0f)
+                }
+            }
         }
     }
 
@@ -352,7 +390,7 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                // Extract coordinate from stored array array
+                // Extract coordinate from stored array
                 val roundedPos = (event.x).roundToInt()
 
                 if (roundedPos == oldRoundedPos) {

@@ -2,7 +2,6 @@ package com.yabu.livechart.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import com.yabu.livechart.model.DataPoint
@@ -71,6 +70,7 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
     fun reset() {
         disableTouchOverlay = false
         livechart.reset()
+        overlay.reset()
     }
 
     /**
@@ -187,7 +187,7 @@ class LiveChart(context: Context, attrs: AttributeSet?) : FrameLayout(context, a
     @PublicApi
     fun setYAxisGravity(gravity: Int): LiveChart {
         livechart.setYAxisGravity(gravity)
-
+        overlay.setYAxisGravity(gravity)
         return this
     }
 

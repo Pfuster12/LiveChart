@@ -91,27 +91,28 @@ class MainActivity : AppCompatActivity() {
             .drawDataset()
 
         livechartNegative.setDataset(negativeDataset)
-            .setLiveChartStyle(style)
-            .drawYBounds()
-            .drawSmoothPath()
-            .drawBaseline()
-            .drawFill()
-            .drawHorizontalGuidelines(steps = 4)
-            .drawVerticalGuidelines(steps = 4)
-            .drawBaselineConditionalColor()
-            .drawLastPointLabel()
-            .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
-                @SuppressLint("SetTextI18n")
-                override fun onTouchCallback(point: DataPoint) {
-                    livechartNegative.parent
-                        .requestDisallowInterceptTouchEvent(true)
-                }
+                .setLiveChartStyle(style)
+                .drawYBounds()
+                .drawSmoothPath()
+                .drawBaseline()
+                .drawFill()
+                .setYAxisGravity(Gravity.START)
+                .drawHorizontalGuidelines(steps = 4)
+                .drawVerticalGuidelines(steps = 4)
+                .drawBaselineConditionalColor()
+                .drawLastPointLabel()
+                .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
+                    @SuppressLint("SetTextI18n")
+                    override fun onTouchCallback(point: DataPoint) {
+                        livechartNegative.parent
+                            .requestDisallowInterceptTouchEvent(true)
+                    }
 
-                override fun onTouchFinished() {
-                    livechartNegative.parent
-                        .requestDisallowInterceptTouchEvent(false)
-                }
-            })
-            .drawDataset()
+                    override fun onTouchFinished() {
+                        livechartNegative.parent
+                            .requestDisallowInterceptTouchEvent(false)
+                    }
+                })
+                .drawDataset()
     }
 }

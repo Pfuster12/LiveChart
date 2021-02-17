@@ -677,18 +677,43 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
                 dataset.points.forEachIndexed { index, point ->
                     // move path to first data point,
                     if (index == 0) {
-                        moveTo(chartBounds.start + point.x.xPointToPixels(),
-                            point.y.yPointToPixels())
+                        when (yAxisGravity) {
+                            Gravity.START -> {
+                                moveTo(
+                                    chartBounds.start + point.x.xPointToPixels() +
+                                            if (drawYBounds) chartStyle.chartEndPadding else 0f,
+                                    point.y.yPointToPixels()
+                                )
+                            }
+                            Gravity.END -> {
+                                moveTo(
+                                    chartBounds.start + point.x.xPointToPixels(),
+                                    point.y.yPointToPixels()
+                                )
+                            }
+                        }
                         return@forEachIndexed
                     }
 
                     lineTo(chartBounds.start + point.x.xPointToPixels(),
                         point.y.yPointToPixels())
                 }
-                lineTo(chartBounds.start + dataset.points.last().x.xPointToPixels(),
-                    chartBounds.bottom)
-                lineTo(chartBounds.start + dataset.points.first().x.xPointToPixels(),
-                    chartBounds.bottom)
+                when (yAxisGravity) {
+                    Gravity.START -> {
+                        lineTo(chartBounds.start + dataset.points.last().x.xPointToPixels() +
+                                if (drawYBounds) chartStyle.chartEndPadding else 0f,
+                            chartBounds.bottom)
+                        lineTo(chartBounds.start + dataset.points.first().x.xPointToPixels() +
+                                if (drawYBounds) chartStyle.chartEndPadding else 0f,
+                            chartBounds.bottom)
+                    }
+                    Gravity.END -> {
+                        lineTo(chartBounds.start + dataset.points.last().x.xPointToPixels(),
+                            chartBounds.bottom)
+                        lineTo(chartBounds.start + dataset.points.first().x.xPointToPixels(),
+                            chartBounds.bottom)
+                    }
+                }
             }
 
             // Gradient paint
@@ -848,14 +873,6 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
 
             // Last Point Label
             if (drawLastPointLabel) {
-                when (yAxisGravity) {
-                    Gravity.START -> {
-
-                    }
-                    Gravity.END -> {
-
-                    }
-                }
                 // draw end tag line
                 canvas.drawLine(
                     when (yAxisGravity) {
