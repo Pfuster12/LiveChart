@@ -288,6 +288,17 @@ livechart.setDataset(dataset)
 
 This allows us to show the current point the user is dragging along.
 
+Since v1.3.5, the touch overlay can be displayed at all times by applying the `drawTouchOverlayAlways()` flag.
+
+```kotlin
+val textView = findViewById(R.id.text_view)
+
+livechart.setDataset(dataset)
+        .drawTouchOverlayAlways()
+        .drawDataset()
+```
+
+
 ### Disabling the touch overlay
 
 If you don't want the touch overlay it can be disabled easily:
