@@ -28,7 +28,7 @@ allprojects {
 
 ```gradle
 dependencies {
-	  implementation 'com.github.Pfuster12:LiveChart:1.3.4'
+	  implementation 'com.github.Pfuster12:LiveChart:1.3.5'
 }
 ```
 
