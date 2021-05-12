@@ -165,7 +165,6 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     /**
      * Manually set the INITIAL nearest position of the touch overlay.
      * The given position will be mapped onto the path created if it exists.
-     * Note a Float value is rounded to an Int to avoid half pixel positions.
      * IMPORTANT this must be called AFTER setDataset() as the pathCoordinates
      * need to be extracted. Also after .drawSmoothPath() if you are using it
      * to take into consideration the smooth path coordinates.
@@ -176,9 +175,29 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     }
 
     /**
-     * Manually set the nearest position of the touch overlay.
+     * Manually set the nearest data point position of the touch overlay.
      * The given position will be mapped onto the path created if it exists.
-     * Note a Float value is rounded to an Int to avoid half pixel positions.
+     * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
+     * need to be extracted.
+     */
+    @PublicApi
+    fun setDataPointPosition(position: Float) {
+        val xPos = position.xPointToPixels()
+
+        val coordinates = pathCoordinates.firstOrNull {
+            it[0].roundToInt() == xPos.roundToInt()
+        }
+
+        if (coordinates != null) {
+            overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+            overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+        }
+    }
+
+    /**
+     * Manually set the nearest position of the touch overlay in pixel terms.
+     * Useful to make animations with the overlay.
+     * The given position will be mapped onto the path created if it exists.
      * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
      * need to be extracted.
      */
@@ -289,7 +308,6 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
                 if (initialXPosition > -1f) {
                     val xPos = initialXPosition.xPointToPixels()
                     val coordinates = pathCoordinates.firstOrNull {
-                        Log.d("TouchOverlay", "${xPos}")
                         it[0].roundToInt() == xPos.roundToInt()
                     }
 

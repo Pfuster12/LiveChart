@@ -250,32 +250,34 @@ class LiveChart(context: Context, attrs: AttributeSet? = null) : FrameLayout(con
     }
 
     /**
-     * Manually set the INITIAL nearest position of the touch overlay.
-     * ONLY use for initial setting as there is a calculation cost
-     * to map the path coordinates before the drawDataset() call is performed.
-     *
-     * The given position will be mapped onto the path created if it exists.
-     * Note a Float value is rounded to an Int to avoid half pixel positions.
-     * IMPORTANT this must be called AFTER setDataset() as the pathCoordinates
-     * need to be extracted. Also after .drawSmoothPath() if you are using it
-     * to take into consideration the smooth path coordinates.
+     * Manually set the INITIAL nearest DataPoint position of the touch overlay.
      */
     @PublicApi
-    fun setInitialTouchOverlayPosition(position: Float): LiveChart {
-        overlay.setInitialPosition(position)
+    fun setInitialTouchOverlayPosition(point: DataPoint): LiveChart {
+        overlay.setInitialPosition(point.x)
 
         return this
     }
 
     /**
-     * Set manually the overlay position at any time after the drawing operation.
+     * Set manually the overlay nearest DataPoint position at any time after the drawing operation.
+     * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
+     * need to be extracted.
+     */
+    @PublicApi
+    fun setTouchOverlayPosition(point: DataPoint) {
+        overlay.setDataPointPosition(point.x)
+    }
+
+    /**
+     * Set manually the overlay real pixel position at any time after the drawing operation.
+     * This is useful for animating the touch overlay.
      * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
      * need to be extracted.
      * The given position will be mapped onto the path created if it exists.
-     * Note a Float value is rounded to an Int to avoid half pixel positions.
      */
     @PublicApi
-    fun setTouchOverlayPosition(position: Float) {
+    fun setTouchOverlayRealPosition(position: Float) {
         overlay.setPosition(position)
     }
 
