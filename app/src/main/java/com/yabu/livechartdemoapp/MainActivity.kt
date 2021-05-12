@@ -3,6 +3,7 @@ package com.yabu.livechartdemoapp
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.yabu.livechart.model.DataPoint
 import com.yabu.livechart.model.Dataset
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             .setLiveChartStyle(chartStyle)
             .drawTouchOverlayAlways()
             .drawSmoothPath()
+            .setInitialTouchOverlayPosition(dataset.points[3].x)
             .setOnTouchCallbackListener(object : LiveChart.OnTouchCallback {
                 @SuppressLint("SetTextI18n")
                 override fun onTouchCallback(point: DataPoint) {

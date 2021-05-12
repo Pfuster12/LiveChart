@@ -250,6 +250,38 @@ class LiveChart(context: Context, attrs: AttributeSet? = null) : FrameLayout(con
     }
 
     /**
+     * Manually set the INITIAL nearest DataPoint position of the touch overlay.
+     */
+    @PublicApi
+    fun setInitialTouchOverlayPosition(point: DataPoint): LiveChart {
+        overlay.setInitialPosition(point.x)
+
+        return this
+    }
+
+    /**
+     * Set manually the overlay nearest DataPoint position at any time after the drawing operation.
+     * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
+     * need to be extracted.
+     */
+    @PublicApi
+    fun setTouchOverlayPosition(point: DataPoint) {
+        overlay.setDataPointPosition(point.x)
+    }
+
+    /**
+     * Set manually the overlay real pixel position at any time after the drawing operation.
+     * This is useful for animating the touch overlay.
+     * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
+     * need to be extracted.
+     * The given position will be mapped onto the path created if it exists.
+     */
+    @PublicApi
+    fun setTouchOverlayRealPosition(position: Float) {
+        overlay.setPosition(position)
+    }
+
+    /**
      * Draw on chart and bind overlay to dataset.
      */
     @PublicApi

@@ -200,7 +200,27 @@ You can also style a number of attributes through the XML layout attributes. For
         app:overlayCircleDiameter="8dp"/>
 ```
 
-For a full set of available attributes you can check the `LiveChartView` reference.
+The current set of available attributes are:
+
+```xml
+    <attr name="labelTextColor" format="reference|color" />
+    <attr name="pathColor" format="reference|color"/>
+    <attr name="secondPathColor" format="reference|color"/>
+    <attr name="fillColor" format="reference|color"/>
+    <attr name="baselineColor" format="reference|color"/>
+    <attr name="boundsColor" format="reference|color"/>
+    <attr name="positiveColor" format="reference|color"/>
+    <attr name="negativeColor" format="reference|color"/>
+    <attr name="mainCornerRadius" format="dimension"/>
+    <attr name="secondCornerRadius" format="dimension"/>
+    <attr name="pathStrokeWidth" format="dimension"/>
+    <attr name="baselineStrokeWidth" format="dimension"/>
+    <attr name="baselineDashGap" format="dimension"/>
+    <attr name="labelTextHeight" format="dimension"/>
+    <attr name="overlayLineColor" format="reference|color"/>
+    <attr name="overlayCircleColor" format="reference|color"/>
+    <attr name="overlayCircleDiameter" format="dimension"/>
+```
 
 ## Second Dataset
 
@@ -497,6 +517,30 @@ Public Methods for LiveChart:
      * or as an optimization if you require less overhead on your View.
      */
     fun disableTouchOverlay(): LiveChart
+
+    /**
+     * Manually set the INITIAL nearest DataPoint position of the touch overlay.
+     */
+    @PublicApi
+    fun setInitialTouchOverlayPosition(point: DataPoint): LiveChart
+
+    /**
+     * Manually set the overlay nearest DataPoint position at any time after the drawing operation.
+     * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
+     * need to be extracted.
+     */
+    @PublicApi
+    fun setTouchOverlayPosition(point: DataPoint)
+
+    /**
+     * Manually set the overlay REAL pixel position at any time after the drawing operation.
+     * This is useful for animating the touch overlay.
+     * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
+     * need to be extracted.
+     * The given position will be mapped onto the path created if it exists.
+     */
+    @PublicApi
+    fun setTouchOverlayRealPosition(position: Float)
 
     /**
      * Draw on chart and bind overlay to dataset.

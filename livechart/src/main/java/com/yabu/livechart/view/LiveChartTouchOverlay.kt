@@ -6,13 +6,11 @@ import android.content.res.ColorStateList
 import android.graphics.Path
 import android.graphics.PathMeasure
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.yabu.livechart.R
 import com.yabu.livechart.model.Bounds
 import com.yabu.livechart.model.DataPoint
@@ -21,7 +19,6 @@ import com.yabu.livechart.utils.EPointF
 import com.yabu.livechart.utils.PolyBezierPathUtil
 import com.yabu.livechart.utils.PublicApi
 import com.yabu.livechart.view.LiveChart.OnTouchCallback
-import java.lang.Exception
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
@@ -73,6 +70,11 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
      * Second dataset
      */
     private var secondDataset: Dataset = Dataset.new()
+
+    /**
+     * Initial Overlay X Position. Defaults to -1 (Not set)
+     */
+    private var initialXPosition: Float = -1f
 
     /**
      * Path generated from dataset points.
@@ -158,6 +160,60 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
     fun alwaysDisplay() {
         overlay.alpha = 1f
         alwaysDisplay = true
+    }
+
+    /**
+     * Manually set the INITIAL nearest position of the touch overlay.
+     * The given position will be mapped onto the path created if it exists.
+     * IMPORTANT this must be called AFTER setDataset() as the pathCoordinates
+     * need to be extracted. Also after .drawSmoothPath() if you are using it
+     * to take into consideration the smooth path coordinates.
+     */
+    @PublicApi
+    fun setInitialPosition(position: Float) {
+        initialXPosition = position
+    }
+
+    /**
+     * Manually set the nearest data point position of the touch overlay.
+     * The given position will be mapped onto the path created if it exists.
+     * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
+     * need to be extracted.
+     */
+    @PublicApi
+    fun setDataPointPosition(position: Float) {
+        val xPos = position.xPointToPixels()
+
+        val coordinates = pathCoordinates.firstOrNull {
+            it[0].roundToInt() == xPos.roundToInt()
+        }
+
+        if (coordinates != null) {
+            overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+            overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+        }
+    }
+
+    /**
+     * Manually set the nearest position of the touch overlay in pixel terms.
+     * Useful to make animations with the overlay.
+     * The given position will be mapped onto the path created if it exists.
+     * IMPORTANT this must be called AFTER drawDataset() as the pathCoordinates
+     * need to be extracted.
+     */
+    @PublicApi
+    fun setPosition(position: Float) {
+        // Extract coordinate from stored array
+        val roundedPos = position.roundToInt()
+
+        val coordinates = pathCoordinates.firstOrNull {
+            (it[0]).roundToInt() == roundedPos
+        }
+
+        if (coordinates != null) {
+            overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+            overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+        }
     }
 
     /**
@@ -249,10 +305,22 @@ class LiveChartTouchOverlay(context: Context, attrs: AttributeSet?)
             extractCoordinatesFromPath()
 
             try {
-                // Set to default in the middle of the path
-                val coordinates = pathCoordinates[round(pathCoordinates.size.div(2).toFloat()).toInt()]
-                overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
-                overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+                if (initialXPosition > -1f) {
+                    val xPos = initialXPosition.xPointToPixels()
+                    val coordinates = pathCoordinates.firstOrNull {
+                        it[0].roundToInt() == xPos.roundToInt()
+                    }
+
+                    if (coordinates != null) {
+                        overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+                        overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+                    }
+                } else {
+                    // Set to default in the middle of the path
+                    val coordinates = pathCoordinates[round(pathCoordinates.size.div(2).toFloat()).toInt()]
+                    overlay.x = coordinates[0] - (chartStyle.overlayCircleDiameter/2)
+                    overlayPoint.y = coordinates[1] - (chartStyle.overlayCircleDiameter/2)
+                }
             } catch (e: Exception) {
                 Log.e("Overlay", e.message.toString())
             }
