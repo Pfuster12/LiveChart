@@ -200,7 +200,27 @@ You can also style a number of attributes through the XML layout attributes. For
         app:overlayCircleDiameter="8dp"/>
 ```
 
-For a full set of available attributes you can check the `LiveChartView` reference.
+The current set of available attributes are:
+
+```xml
+    <attr name="labelTextColor" format="reference|color" />
+    <attr name="pathColor" format="reference|color"/>
+    <attr name="secondPathColor" format="reference|color"/>
+    <attr name="fillColor" format="reference|color"/>
+    <attr name="baselineColor" format="reference|color"/>
+    <attr name="boundsColor" format="reference|color"/>
+    <attr name="positiveColor" format="reference|color"/>
+    <attr name="negativeColor" format="reference|color"/>
+    <attr name="mainCornerRadius" format="dimension"/>
+    <attr name="secondCornerRadius" format="dimension"/>
+    <attr name="pathStrokeWidth" format="dimension"/>
+    <attr name="baselineStrokeWidth" format="dimension"/>
+    <attr name="baselineDashGap" format="dimension"/>
+    <attr name="labelTextHeight" format="dimension"/>
+    <attr name="overlayLineColor" format="reference|color"/>
+    <attr name="overlayCircleColor" format="reference|color"/>
+    <attr name="overlayCircleDiameter" format="dimension"/>
+```
 
 ## Second Dataset
 
