@@ -542,7 +542,7 @@ open class LiveChartView(context: Context, attrs: AttributeSet?) : View(context,
 
             // Assign the lower bound of this chart,
             lowerBound = if (secondDataset.hasData()) {
-               min(dataset.lowerBound(), secondDataset.lowerBound())
+                min(dataset.lowerBound(), secondDataset.lowerBound())
             } else {
                 dataset.lowerBound()
             }
